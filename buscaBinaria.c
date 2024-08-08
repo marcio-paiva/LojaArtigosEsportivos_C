@@ -44,6 +44,7 @@ Produto* buscaBinariaProduto(int chave, FILE *in, int tam) {
 }
 
 Cliente* buscaBinariaCliente(int chave, FILE *in, int tam) {
+    int achou = 0;
     int comparacoes = 0; // Inicializa o contador de comparações
     int esq = 0;
     int dir = tam - 1;
@@ -58,6 +59,7 @@ Cliente* buscaBinariaCliente(int chave, FILE *in, int tam) {
         comparacoes++; // Conta a comparação realizada
 
         if (f->codigo == chave) {
+            achou = 1;
             free(f); // Libera o registro lido
             printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
             return f;
@@ -69,12 +71,19 @@ Cliente* buscaBinariaCliente(int chave, FILE *in, int tam) {
 
         free(f); // Libera o registro lido
     }
+    if(achou = 0){
+        printf("Produto com codigo %d nao encontrado.\n", chave);
+        printf("Numero de comparacees: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+        return NULL; // Retorna NULL se não encontrar
+    
+     }
 
-    printf("Número de comparacoes: %d\n", comparacoes); 
+    printf("Numero de comparacoes: %d\n", comparacoes); 
     return NULL; 
 }
 
 Pedido* buscaBinariaPedido(int chave, FILE *in, int tam) {
+    int achou = 0;
     int comparacoes = 0; // Inicializa o contador de comparações
     int esq = 0;
     int dir = tam - 1;
@@ -89,6 +98,7 @@ Pedido* buscaBinariaPedido(int chave, FILE *in, int tam) {
         comparacoes++; // Conta a comparação realizada
 
         if (f->codigo == chave) {
+            achou = 1;
             free(f); // Libera o registro lido
             printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
             return f;
@@ -99,6 +109,11 @@ Pedido* buscaBinariaPedido(int chave, FILE *in, int tam) {
         }
 
         free(f); // Libera o registro lido
+    }
+    if(achou = 0){
+        printf("Produto com codigo %d nao encontrado.\n", chave);
+        printf("Numero de comparacees: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+        return NULL; // Retorna NULL se não encontrar
     }
 
     printf("Numero de comparacoes: %d\n", comparacoes); 

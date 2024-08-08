@@ -87,7 +87,7 @@ void removeProduto(int codigo, FILE *arquivo) {
         printf("\nProduto com codigo %d removido com sucesso.\n", codigo);
     } else {
         remove("temp.dat");              // Remove o arquivo temporário
-        printf("\nProduto com codigo %d não encontrado.\n", codigo);
+        printf("\nProduto com codigo %d nao encontrado.\n", codigo);
     }
      arquivo = fopen("produtos.dat", "rb");
         if (!arquivo) {
@@ -181,7 +181,7 @@ void removeCliente(int codigo, FILE *arquivo) {
         remove("temp.dat");              // Remove o arquivo temporário
         printf("Cliente com codigo %d não encontrado.\n", codigo);
     }
-    arquivo = fopen("clientess.dat", "rb");
+    arquivo = fopen("clientes.dat", "rb");
     if (!arquivo) {
         perror("Nao foi possivel reabrir o arquivo clientes.dat");
         return;
@@ -271,12 +271,12 @@ void removePedido(int codigo, FILE *arquivo){
         fclose(arquivo);
         remove("pedidos.dat");          // Remove o arquivo original
         rename("temp.dat", "pedidos.dat"); // Renomeia o arquivo temporário
-        printf("Cliente com codigo %d removido com sucesso.\n", codigo);
+        printf("Pedido com codigo %d removido com sucesso.\n", codigo);
     } else {
         remove("temp.dat");              // Remove o arquivo temporário
-        printf("Cliente com codigo %d nao encontrado.\n", codigo);
+        printf("Pedido com codigo %d nao encontrado.\n", codigo);
     }
-    arquivo = fopen("clientess.dat", "rb");
+    arquivo = fopen("pedidos.dat", "rb");
     if (!arquivo) {
         perror("Nao foi possivel reabrir o arquivo pedidos.dat");
         return;
@@ -378,5 +378,3 @@ void criarBasePedidos(FILE *out, int tam) {
          free(ped);
     }
 }
-
-
