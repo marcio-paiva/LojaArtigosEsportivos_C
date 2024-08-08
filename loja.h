@@ -1,5 +1,3 @@
-// Arquivo: artigos_esportivos.h
-
 #ifndef ARTIGOS_ESPORTIVOS_H
 #define ARTIGOS_ESPORTIVOS_H
 
@@ -34,6 +32,7 @@ typedef struct {
 Produto* criaProduto(int codigo, char *nome, double preco, int quantidade);
 void salvaProduto(Produto *prod, FILE *out);
 Produto* leProduto(FILE *in);
+void criarBaseProdutos(FILE *out, int tam);
 void imprimeProduto(Produto *prod);
 void removeProduto(int codigo, FILE *arquivo);
 void imprimirBaseProdutos(FILE *out);
@@ -42,6 +41,7 @@ void imprimirBaseProdutos(FILE *out);
 Cliente* criaCliente(int codigo, char *nome, char *cpf, char *endereco);
 void salvaCliente(Cliente *cli, FILE *out);
 Cliente* leCliente(FILE *in);
+void criarBaseClientes(FILE *out, int tam);
 void imprimeCliente(Cliente *cli);
 void removeCliente(int codigo, FILE *arquivo);
 void imprimirBaseCliente(FILE *out);
@@ -50,6 +50,7 @@ void imprimirBaseCliente(FILE *out);
 Pedido* criaPedido(int codigo, int codigo_cliente, int codigo_produto, int quantidade, double total);
 void salvaPedido(Pedido *ped, FILE *out);
 Pedido* lePedido(FILE *in);
+void criarBasePedidos(FILE *out, int tam);
 void imprimePedido(Pedido *ped);
 void removePedido(int codigo, FILE *arquivo);
 void imprimirBasePedido(FILE *out);
@@ -60,8 +61,7 @@ int tamanhoRegistroCliente();
 int tamanhoRegistroPedido();
 int qtdRegistros(FILE *arq, int tamanho_registro);
 void embaralha(int *array, int n);
-void criarBaseProdutos(FILE *out, int tam);
-void criarBaseClientes(FILE *out, int tam);
-void criarBasePedidos(FILE *out, int tam);
 int codigoExiste(int codigo, FILE* arq_prod);
+
+
 #endif // ARTIGOS_ESPORTIVOS_H
