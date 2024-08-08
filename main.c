@@ -21,21 +21,23 @@ int main() {
     }
 
     clock_t start_time, end_time; double time;
-    int opcao_geral; 
+    int opcao_geral; //Utilizada para controlar switch case externo (menu geral)
     do{
-        printf("\nMenu de Geral:\n");
+        printf("\n=== Menu de Geral ===\n");
         printf("1. Menu de Produtos\n");
         printf("2. Menu de Clientes\n");
         printf("3. Menu de Pedidos\n");
         printf("0. Voltar\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao_geral);
-        int opcao;
-        int codigo; char nome[100]; double preco; int quantidade; //Utilizadas para adicionar produto/cliente
-        int chave;
-        char cpf[14], endereco[100];
-        int codigo_cli; int codigo_prod; double total;
+        
+        int codigo; //Utilizada para adicionar produto/cliente
+        char nome[100]; double preco; int quantidade; //Utilizadas para adicionar produto
+        int chave; //Utilizada para fazer buscas
+        char cpf[14], endereco[100]; //Utilizadas para adicionar cliente
+        int codigo_cli; int codigo_prod; double total; //Utilizadas para adicionar pedido
 
+        int opcao; //Utilizada para controlar switch case interno de cada menu
         switch (opcao_geral){
         case 1:
             do {
