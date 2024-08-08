@@ -51,7 +51,7 @@ Cliente* buscaSequencialCliente(int chave, FILE *in) {
         printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
         return f;
     } else {
-        printf("\nCliente não encontrado\n\n");
+        printf("\nCliente nao encontrado\n\n");
         printf("Numero de comparacoes: %d\n", comparacoes); 
     }
 

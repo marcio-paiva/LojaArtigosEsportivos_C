@@ -185,7 +185,7 @@ int main() {
                         time = (end_time - start_time) / 1000.0;
                         if (resultado_cli != NULL) {
                             imprimeCliente(resultado_cli);
-                                printf("\nTempo de execucao da busca sequencial dos produtos: %.6f segundos\n", time);
+                                printf("\nTempo de execucao da busca sequencial dos clientes: %.6f segundos\n", time);
                             free(resultado_cli);
                         }
                         break;
@@ -198,14 +198,14 @@ int main() {
                         selectionSortClientes(arq_cli, TAM_CLIENTES); // ORDENAR ANTES
                         end_time = clock();
                         time = (end_time - start_time) / 1000.0;
-                            printf("\nTempo de execucao da ordenacao dos produtos: %.6f segundos\n", time);
+                        printf("\nTempo de execucao da ordenacao dos clientes: %.6f segundos\n", time);
                         start_time = clock();
                         resultado_cli = buscaBinariaCliente(chave, arq_cli, TAM_CLIENTES);
                         end_time = clock();
                         time = (end_time - start_time) / 1000.0;
                         if (resultado_cli != NULL) {
                             imprimeCliente(resultado_cli);
-                            printf("\nTempo de execucao da busca binária dos clientes: %.6f segundos\n", time);
+                            printf("\nTempo de execucao da busca binaria dos clientes: %.6f segundos\n", time);
                             free(resultado_cli);
                         }else{
                             printf("\nCliente nao encontrado.\n\n");
@@ -306,12 +306,16 @@ int main() {
                 break;
 
             case 4:
-               //BUSCA SEQUENCIAL NA BASE DE PEDIDOS
-               printf("\n\nDigite o codigo do pedido para buscar: ");
+                //BUSCA SEQUENCIAL NA BASE DE PEDIDOS
+                printf("\n\nDigite o codigo do pedido para buscar: ");
                 scanf("%d", &chave);
+                start_time = clock();
                 Pedido *resultado_ped = buscaSequencialPedido(chave, arq_ped);
+                end_time = clock();
+                time = (end_time - start_time) / 1000.0;
                 if (resultado_ped != NULL) {
                     imprimePedido(resultado_ped);
+                    printf("\nTempo de execucao da busca sequencial dos pedidos: %.6f segundos\n", time);
                     free(resultado_ped);
                 }
                 break;
@@ -320,14 +324,23 @@ int main() {
                 //BUSCA BINARIA NA BASE DE PEDIDOS
                 printf("\n\nDigite o codigo do pedido para buscar: ");
                 scanf("%d", &chave);
-                selectionSortPedidos(arq_cli, TAM_PEDIDOS); // ORDENAR ANTES
+                start_time = clock();
+                selectionSortPedidos(arq_ped, TAM_PEDIDOS); // ORDENAR ANTES
+                end_time = clock();
+                time = (end_time - start_time) / 1000.0;
+                printf("\nTempo de execucao da ordenacao dos pedidos: %.6f segundos\n", time);
+                start_time = clock();
                 resultado_ped = buscaBinariaPedido(chave, arq_ped, TAM_PEDIDOS);
+                end_time = clock();
+                time = (end_time - start_time) / 1000.0;
                 if (resultado_ped != NULL) {
                     imprimePedido(resultado_ped);
+                    printf("\nTempo de execucao da busca binaria dos pedidos: %.6f segundos\n", time);
                     free(resultado_ped);
                 }else{
                     printf("\nPedido nao encontrado.\n\n");
                 }
+                break;
 
             case 6:
                 //ORDENA BASE DE Pedidos - SELECTION SORT (Retorna tempo de execução)
