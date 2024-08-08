@@ -233,6 +233,18 @@ void imprimePedido(Pedido *ped) {
     printf("\n**********************************************");
 }
 
+void imprimirBasePedido(FILE *out){
+    printf("\nImprimindo a base de dados...\n");
+
+    rewind(out);
+    void *item;
+
+    while ((item = lePedido(out)) != NULL) {
+        imprimePedido(item);
+        free(item);
+    }
+}
+
 // Funcoes auxiliares
 int tamanhoRegistroProduto() {
     return sizeof(int)         // codigo

@@ -12,6 +12,7 @@ int main() {
     clock_t start_time, end_time; double time;
     int TAM_PRODUTOS = 1000; //ALTERAR TAMANHO DA BASE DE PRODUTOS AQUI
     int TAM_CLIENTES = 1000; //ALTERAR TAMANHO DA BASE DE CLIENTES AQUI
+    int TAM_PEDIDOS = 0; //NÃO ALTERAR TAMANHO 
 
     FILE *arq_prod = fopen("produtos.dat", "wb+");
     FILE *arq_cli = fopen("clientes.dat", "wb+");
@@ -36,6 +37,7 @@ int main() {
         int codigo; char nome[100]; double preco; int quantidade; //Utilizadas para adicionar produto/cliente
         int chave;
         char cpf[14], endereco[100];
+        int codigo_cli; int codigo_prod; double total;
 
         switch (opcao_geral){
         case 1:
@@ -243,93 +245,91 @@ int main() {
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
         switch (opcao){
-            // case 1:
-            //     //ADICIONAR PEDIDO NA BASE
-            //     printf("Informe o codigo do pedido: ");
-            //     scanf("%d", &codigo);
-            //     getchar(); //captura o /n
-            //     printf("Informe o nome do cliente: ");
-            //     fgets(nome, sizeof(nome), stdin);
-            //     nome[strcspn(nome, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
-            //     printf("Informe o cpf do cliente: ");
-            //     fgets(cpf, sizeof(cpf), stdin);
-            //     cpf[strcspn(cpf, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
-            //     printf("Informe o endereco do cliente: ");
-            //     fgets(endereco, sizeof(endereco), stdin);
-            //     endereco[strcspn(endereco, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
-            //     TAM_CLIENTES += 1;
-            //     Cliente* cliente = criaCliente(codigo, nome, cpf, endereco);
-            //     salvaCliente(cliente, arq_cli);
-            //     imprimeCliente(cliente);
-            //     printf("\nCriado com sucesso!");
-            //     break;
+            case 1:
+                //ADICIONAR PEDIDO NA BASE
+                printf("Informe o codigo do pedido: ");
+                scanf("%d", &codigo);
+                printf("Informe o codigo do pedido: ");
+                scanf("%d", &codigo_cli);
+                printf("Informe o codigo do pedido: ");
+                scanf("%d", &codigo_prod);
+                printf("Informe o codigo do pedido: ");
+                scanf("%d", &quantidade);
+                printf("Informe o codigo do pedido: ");
+                scanf("%lf", &total);
+                TAM_PEDIDOS += 1;
+                Pedido* pedido = criaPedido(codigo, codigo_cli, codigo_prod, quantidade, total);
+                salvaPedido(pedido, arq_ped);
+                imprimePedido(pedido);
+                printf("\nPedido adicionado com sucesso!");
+                break;
 
-            // case 2:
-            //     //IMPRIME BASE DE CLIENTES
-            //     imprimirBaseCliente(arq_cli);
-            //     break;
+            case 3:
+                //IMPRIME BASE DE PEDIDOS
+                imprimirBasePedido(arq_ped);
+                break;
 
-            // case 3:
-            //     //BUSCA SEQUENCIAL NA BASE DE CLIENTES
-            //     printf("\n\nDigite o codigo do cliente para buscar: ");
-            //     scanf("%d", &chave);
-            //     Cliente *resultado_cli = buscaSequencialCliente(chave, arq_cli);
-            //     if (resultado_cli != NULL) {
-            //         imprimeCliente(resultado_cli);
-            //         free(resultado_cli);
-            //     }
-            //     break;
+            case 2:
+                //BUSCA SEQUENCIAL NA BASE DE CLIENTES
+                printf("\n\nDigite o codigo do cliente para buscar: ");
+                scanf("%d", &chave);
+                Cliente *resultado_cli = buscaSequencialCliente(chave, arq_cli);
+                if (resultado_cli != NULL) {
+                    imprimeCliente(resultado_cli);
+                    free(resultado_cli);
+                }
+                break;
 
-            // case 4:
-            //     //BUSCA BINARIA NA BASE DE CLIENTES
-            //     printf("\n\nDigite o codigo do produto para buscar: ");
-            //     scanf("%d", &chave);
-            //     selectionSortClientes(arq_cli, TAM_CLIENTES); // ORDENAR ANTES
-            //     resultado_cli = buscaBinariaCliente(chave, arq_cli, TAM_CLIENTES);
-            //     if (resultado_cli != NULL) {
-            //         imprimeCliente(resultado_cli);
-            //         free(resultado_cli);
-            //     }else{
-            //         printf("\nCliente nao encontrado.\n\n");
-            //     }
-            //     break;
+            case 4:
+                //BUSCA BINARIA NA BASE DE CLIENTES
+                printf("\n\nDigite o codigo do produto para buscar: ");
+                scanf("%d", &chave);
+                selectionSortClientes(arq_cli, TAM_CLIENTES); // ORDENAR ANTES
+                resultado_cli = buscaBinariaCliente(chave, arq_cli, TAM_CLIENTES);
+                if (resultado_cli != NULL) {
+                    imprimeCliente(resultado_cli);
+                    free(resultado_cli);
+                }else{
+                    printf("\nCliente nao encontrado.\n\n");
+                }
+                break;
 
-            // case 5:
-            //     //ORDENA BASE DE CLIENTES - SELECTION SORT (Retorna tempo de execução)
-            //     start_time = clock();
-            //     selectionSortClientes(arq_cli, TAM_CLIENTES);
-            //     end_time = clock();
-            //     time = (end_time - start_time) / 1000.0;
-            //     printf("\nTempo de execucao da ordenacao dos clientes: %.6f segundos\n", time);
-            //     break;
+            case 5:
+                //ORDENA BASE DE CLIENTES - SELECTION SORT (Retorna tempo de execução)
+                start_time = clock();
+                selectionSortClientes(arq_cli, TAM_CLIENTES);
+                end_time = clock();
+                time = (end_time - start_time) / 1000.0;
+                printf("\nTempo de execucao da ordenacao dos clientes: %.6f segundos\n", time);
+                break;
 
-            // case 6:
-            //     //ADICIONAR CLIENTE NA BASE
-            //     printf("Informe o codigo do cliente: ");
-            //     scanf("%d", &codigo);
-            //     getchar(); //captura o /n
-            //     printf("Informe o nome do cliente: ");
-            //     fgets(nome, sizeof(nome), stdin);
-            //     nome[strcspn(nome, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
-            //     printf("Informe o cpf do cliente: ");
-            //     fgets(cpf, sizeof(cpf), stdin);
-            //     cpf[strcspn(cpf, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
-            //     printf("Informe o endereco do cliente: ");
-            //     fgets(endereco, sizeof(endereco), stdin);
-            //     endereco[strcspn(endereco, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
-            //     TAM_CLIENTES += 1;
-            //     Cliente* cliente = criaCliente(codigo, nome, cpf, endereco);
-            //     salvaCliente(cliente, arq_cli);
-            //     imprimeCliente(cliente);
-            //     printf("\nCriado com sucesso!");
-            //     break;
+            case 6:
+                //ADICIONAR CLIENTE NA BASE
+                printf("Informe o codigo do cliente: ");
+                scanf("%d", &codigo);
+                getchar(); //captura o /n
+                printf("Informe o nome do cliente: ");
+                fgets(nome, sizeof(nome), stdin);
+                nome[strcspn(nome, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
+                printf("Informe o cpf do cliente: ");
+                fgets(cpf, sizeof(cpf), stdin);
+                cpf[strcspn(cpf, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
+                printf("Informe o endereco do cliente: ");
+                fgets(endereco, sizeof(endereco), stdin);
+                endereco[strcspn(endereco, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
+                TAM_CLIENTES += 1;
+                Cliente* cliente = criaCliente(codigo, nome, cpf, endereco);
+                salvaCliente(cliente, arq_cli);
+                imprimeCliente(cliente);
+                printf("\nCriado com sucesso!");
+                break;
 
-            // case 7:
-            //     printf("Informe o codigo do cliente: ");
-            //     scanf("%d", &codigo);
-            //     removeCliente(codigo, arq_cli);    
-            //     TAM_CLIENTES -= 1;
-            //     break;
+            case 7:
+                printf("Informe o codigo do cliente: ");
+                scanf("%d", &codigo);
+                removeCliente(codigo, arq_cli);    
+                TAM_CLIENTES -= 1;
+                break;
 
             case 0:
                 printf("Voltando...\n");

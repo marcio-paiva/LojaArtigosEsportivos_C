@@ -51,6 +51,7 @@ Pedido* criaPedido(int codigo, int codigo_cliente, int codigo_produto, int quant
 void salvaPedido(Pedido *ped, FILE *out);
 Pedido* lePedido(FILE *in);
 void imprimePedido(Pedido *ped);
+void imprimirBasePedido(FILE *out);
 
 // Fun��es auxiliares
 int tamanhoRegistroProduto();
