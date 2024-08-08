@@ -371,9 +371,16 @@ void criarBaseClientes(FILE *out, int tam) {
 }
 
 void criarBasePedidos(FILE *out, int tam) {
+    int ids[tam];
+    for (int i = 0; i < tam; i++) {
+        ids[i] = i + 1;
+    }
+
+    // Embaralha os IDs para criar clientes em ordem aleatória
+    embaralha(ids, tam);
     Pedido *ped;
     for (int i = 0; i < tam; i++) {
-        ped = criaPedido(i + 1, (i % 10) + 1, (i % 10) + 1, 1, 10.0 * (i + 1));
+        ped = criaPedido(ids[i], (i % 10) + 1, (i % 10) + 1, 1, 10.0 * (i + 1));
         salvaPedido(ped, out);
          free(ped);
     }

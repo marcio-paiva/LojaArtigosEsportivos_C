@@ -12,7 +12,7 @@ int main() {
     clock_t start_time, end_time; double time;
     int TAM_PRODUTOS = 1000; //ALTERAR TAMANHO DA BASE DE PRODUTOS AQUI
     int TAM_CLIENTES = 1000; //ALTERAR TAMANHO DA BASE DE CLIENTES AQUI
-    int TAM_PEDIDOS = 0; //NÃO ALTERAR TAMANHO 
+    int TAM_PEDIDOS = 10; //NÃO ALTERAR TAMANHO 
 
     FILE *arq_prod = fopen("produtos.dat", "wb+");
     FILE *arq_cli = fopen("clientes.dat", "wb+");
@@ -269,6 +269,7 @@ int main() {
         printf("4. Busca Sequencial\n");
         printf("5. Busca Binaria\n");
         printf("6. Ordenar Base de Pedidos\n");
+        printf("7. Criar Base de Pedidos\n");
         printf("0. Voltar\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
@@ -336,7 +337,10 @@ int main() {
                 time = (end_time - start_time) / 1000.0;
                 printf("\nTempo de execucao da ordenacao dos pedidos: %.6f segundos\n", time);
                 break;
-
+            case 7:
+                //CRIA BASE DE PEDIDOS
+                criarBasePedidos(arq_ped, TAM_PEDIDOS);
+                break;
             case 0:
                 printf("Voltando...\n");
                 break;
