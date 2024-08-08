@@ -68,9 +68,13 @@ int main() {
                         //BUSCA SEQUENCIAL NA BASE DE PRODUTOS
                         printf("\n\nDigite o codigo do produto para buscar: ");
                         scanf("%d", &chave);
+                        start_time = clock();
                         Produto *resultado_prod = buscaSequencialProduto(chave, arq_prod);
+                        end_time = clock();
+                        time = (end_time - start_time) / 1000.0;
                         if (resultado_prod != NULL) {
                             imprimeProduto(resultado_prod);
+                                printf("\nTempo de execucao da busca sequencial dos produtos: %.6f segundos\n", time);
                             free(resultado_prod);
                         }
                         break;
@@ -79,10 +83,18 @@ int main() {
                         //BUSCA BINARIA NA BASE DE PRODUTOS
                         printf("\n\nDigite o codigo do produto para buscar: ");
                         scanf("%d", &chave);
+                        start_time = clock();
                         selectionSortProdutos(arq_prod, TAM_PRODUTOS);
+                        end_time = clock();
+                        time = (end_time - start_time) / 1000.0;
+                         printf("\nTempo de execucao da ordenacao dos produtos: %.6f segundos\n", time);
+                         start_time = clock();
                         resultado_prod = buscaBinariaProduto(chave, arq_prod, TAM_PRODUTOS);
+                        end_time = clock();
+                        time = (end_time - start_time) / 1000.0;
                         if (resultado_prod != NULL) {
                             imprimeProduto(resultado_prod);
+                            printf("\nTempo de execucao da busca binária dos produtos: %.6f segundos\n", time);
                             free(resultado_prod);
                         }else{
                             printf("\nProduto nao encontrado.\n\n");
@@ -163,21 +175,33 @@ int main() {
                         //BUSCA SEQUENCIAL NA BASE DE CLIENTES
                         printf("\n\nDigite o codigo do cliente para buscar: ");
                         scanf("%d", &chave);
+                        start_time = clock();
                         Cliente *resultado_cli = buscaSequencialCliente(chave, arq_cli);
+                        end_time = clock();
+                        time = (end_time - start_time) / 1000.0;
                         if (resultado_cli != NULL) {
                             imprimeCliente(resultado_cli);
+                                printf("\nTempo de execucao da busca sequencial dos produtos: %.6f segundos\n", time);
                             free(resultado_cli);
                         }
                         break;
 
                     case 4:
                         //BUSCA BINARIA NA BASE DE CLIENTES
-                        printf("\n\nDigite o codigo do produto para buscar: ");
+                        printf("\n\nDigite o codigo do cliente para buscar: ");
                         scanf("%d", &chave);
+                        start_time = clock();
                         selectionSortClientes(arq_cli, TAM_CLIENTES); // ORDENAR ANTES
+                        end_time = clock();
+                        time = (end_time - start_time) / 1000.0;
+                            printf("\nTempo de execucao da ordenacao dos produtos: %.6f segundos\n", time);
+                        start_time = clock();
                         resultado_cli = buscaBinariaCliente(chave, arq_cli, TAM_CLIENTES);
+                        end_time = clock();
+                        time = (end_time - start_time) / 1000.0;
                         if (resultado_cli != NULL) {
                             imprimeCliente(resultado_cli);
+                            printf("\nTempo de execucao da busca binária dos clientes: %.6f segundos\n", time);
                             free(resultado_cli);
                         }else{
                             printf("\nCliente nao encontrado.\n\n");
