@@ -39,7 +39,7 @@ Produto* buscaBinariaProduto(int chave, FILE *in, int tam) {
     
      }
 
-    printf("Numero de comparacees: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+    printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
     return NULL; // Retorna NULL se não encontrar
 }
 
@@ -70,7 +70,7 @@ Cliente* buscaBinariaCliente(int chave, FILE *in, int tam) {
         free(f); // Libera o registro lido
     }
 
-    printf("Número de comparacees: %d\n", comparacoes); 
+    printf("Número de comparacoes: %d\n", comparacoes); 
     return NULL; 
 }
 
@@ -101,6 +101,6 @@ Pedido* buscaBinariaPedido(int chave, FILE *in, int tam) {
         free(f); // Libera o registro lido
     }
 
-    printf("Numero de comparacees: %d\n", comparacoes); 
+    printf("Numero de comparacoes: %d\n", comparacoes); 
     return NULL; 
 }
