@@ -94,3 +94,49 @@ void selectionSortClientes(FILE *arq, int tam) {
     // Descarrega o buffer para ter certeza que dados foram gravados
     fflush(arq);
 }
+
+void selectionSortPedidos(FILE *arq, int tam) {
+    int i, j, min_idx;
+    Pedido *fi, *fj, *fmin;
+
+    for (i = 0; i < tam - 1; i++) {
+        min_idx = i;
+
+        // Lê o registro no índice i e assume que é o menor
+        fseek(arq, i * tamanhoRegistroPedido(), SEEK_SET);
+        fmin = lePedido(arq);
+
+        for (j = i + 1; j < tam; j++) {
+            fseek(arq, j * tamanhoRegistroPedido(), SEEK_SET);
+            fj = lePedido(arq);
+
+            if (fj->codigo < fmin->codigo) {
+                min_idx = j;
+                free(fmin);
+                fmin = fj;
+            } else {
+                free(fj);
+            }
+        }
+
+        // Se min_idx não for o índice atual, trocamos os registros
+        if (min_idx != i) {
+            fseek(arq, i * tamanhoRegistroPedido(), SEEK_SET);
+            fi = lePedido(arq);
+
+            // Salva o menor valor na posição i
+            fseek(arq, i * tamanhoRegistroPedido(), SEEK_SET);
+            salvaPedido(fmin, arq);
+
+            // Salva o valor original na posição min_idx
+            fseek(arq, min_idx * tamanhoRegistroPedido(), SEEK_SET);
+            salvaPedido(fi, arq);
+
+            free(fi);
+        }
+
+        free(fmin);
+    }
+    // Descarrega o buffer para ter certeza que dados foram gravados
+    fflush(arq);
+}

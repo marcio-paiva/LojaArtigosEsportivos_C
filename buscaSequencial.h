@@ -8,6 +8,7 @@
 
 Produto *buscaSequencialProduto(int chave, FILE *in);
 Cliente *buscaSequencialCliente(int chave, FILE *in);
+Pedido *buscaSequencialPedido(int chave, FILE *in);
 
 
 #endif // BUSCASEQUENCIAL_H_INCLUDED

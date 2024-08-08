@@ -273,11 +273,11 @@ int main() {
                 //ADICIONAR PEDIDO NA BASE
                 printf("Informe o codigo do pedido: ");
                 scanf("%d", &codigo);
-                printf("Informe o codigo do pedido: ");
+                printf("Informe o codigo do cliente: ");
                 scanf("%d", &codigo_cli);
-                printf("Informe o codigo do pedido: ");
+                printf("Informe o codigo do produto: ");
                 scanf("%d", &codigo_prod);
-                printf("Informe o codigo do pedido: ");
+                printf("Informe a quantidade: ");
                 scanf("%d", &quantidade);
                 printf("Informe o codigo do pedido: ");
                 scanf("%lf", &total);
@@ -288,71 +288,49 @@ int main() {
                 printf("\nPedido adicionado com sucesso!");
                 break;
 
+            case 2:
+                printf("Informe o codigo do pedido: ");
+                scanf("%d", &codigo);
+                removePedido(codigo, arq_ped);    
+                TAM_PEDIDOS -= 1;
+                break;
+
             case 3:
                 //IMPRIME BASE DE PEDIDOS
                 imprimirBasePedido(arq_ped);
                 break;
 
-            case 2:
-                //BUSCA SEQUENCIAL NA BASE DE CLIENTES
-                printf("\n\nDigite o codigo do cliente para buscar: ");
-                scanf("%d", &chave);
-                Cliente *resultado_cli = buscaSequencialCliente(chave, arq_cli);
-                if (resultado_cli != NULL) {
-                    imprimeCliente(resultado_cli);
-                    free(resultado_cli);
-                }
-                break;
-
             case 4:
-                //BUSCA BINARIA NA BASE DE CLIENTES
-                printf("\n\nDigite o codigo do produto para buscar: ");
+                //BUSCA SEQUENCIAL NA BASE DE PEDIDOS
+                printf("\n\nDigite o codigo do pedido para buscar: ");
                 scanf("%d", &chave);
-                selectionSortClientes(arq_cli, TAM_CLIENTES); // ORDENAR ANTES
-                resultado_cli = buscaBinariaCliente(chave, arq_cli, TAM_CLIENTES);
-                if (resultado_cli != NULL) {
-                    imprimeCliente(resultado_cli);
-                    free(resultado_cli);
-                }else{
-                    printf("\nCliente nao encontrado.\n\n");
+                Pedido *resultado_ped = buscaSequencialPedido(chave, arq_ped);
+                if (resultado_ped != NULL) {
+                    imprimePedido(resultado_ped);
+                    free(resultado_ped);
                 }
                 break;
 
             case 5:
-                //ORDENA BASE DE CLIENTES - SELECTION SORT (Retorna tempo de execução)
-                start_time = clock();
-                selectionSortClientes(arq_cli, TAM_CLIENTES);
-                end_time = clock();
-                time = (end_time - start_time) / 1000.0;
-                printf("\nTempo de execucao da ordenacao dos clientes: %.6f segundos\n", time);
-                break;
+                //BUSCA BINARIA NA BASE DE PEDIDOS
+                printf("\n\nDigite o codigo do pedido para buscar: ");
+                scanf("%d", &chave);
+                selectionSortPedidos(arq_cli, TAM_PEDIDOS); // ORDENAR ANTES
+                resultado_ped = buscaBinariaPedido(chave, arq_ped, TAM_PEDIDOS);
+                if (resultado_ped != NULL) {
+                    imprimePedido(resultado_ped);
+                    free(resultado_ped);
+                }else{
+                    printf("\nPedido nao encontrado.\n\n");
+                }
 
             case 6:
-                //ADICIONAR CLIENTE NA BASE
-                printf("Informe o codigo do cliente: ");
-                scanf("%d", &codigo);
-                getchar(); //captura o /n
-                printf("Informe o nome do cliente: ");
-                fgets(nome, sizeof(nome), stdin);
-                nome[strcspn(nome, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
-                printf("Informe o cpf do cliente: ");
-                fgets(cpf, sizeof(cpf), stdin);
-                cpf[strcspn(cpf, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
-                printf("Informe o endereco do cliente: ");
-                fgets(endereco, sizeof(endereco), stdin);
-                endereco[strcspn(endereco, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
-                TAM_CLIENTES += 1;
-                Cliente* cliente = criaCliente(codigo, nome, cpf, endereco);
-                salvaCliente(cliente, arq_cli);
-                imprimeCliente(cliente);
-                printf("\nCriado com sucesso!");
-                break;
-
-            case 7:
-                printf("Informe o codigo do cliente: ");
-                scanf("%d", &codigo);
-                removeCliente(codigo, arq_cli);    
-                TAM_CLIENTES -= 1;
+                //ORDENA BASE DE Pedidos - SELECTION SORT (Retorna tempo de execução)
+                start_time = clock();
+                selectionSortPedidos(arq_ped, TAM_PEDIDOS);
+                end_time = clock();
+                time = (end_time - start_time) / 1000.0;
+                printf("\nTempo de execucao da ordenacao dos pedidos: %.6f segundos\n", time);
                 break;
 
             case 0:

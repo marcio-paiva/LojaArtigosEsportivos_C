@@ -5,7 +5,6 @@
 #include "loja.h"
 #include "buscaSequencial.h"
 
-//Realiza uma busca sequencial por um produto na base de dados
 Produto *buscaSequencialProduto(int chave, FILE *in){
 
     Produto *f;
@@ -27,7 +26,6 @@ Produto *buscaSequencialProduto(int chave, FILE *in){
     return NULL; // Retorna NULL se não encontrar
 }
 
-//Realiza uma busca sequencial por um cliente na base de dados
 Cliente *buscaSequencialCliente(int chave, FILE *in){
 
     Cliente *f;
@@ -44,6 +42,27 @@ Cliente *buscaSequencialCliente(int chave, FILE *in){
         if(achou == 1)
             return f;
         else printf("\nCliente nao encontrado");
+
+    free(f);
+    return NULL; // Retorna NULL se não encontrar
+}
+
+Pedido *buscaSequencialPedido(int chave, FILE *in){
+
+    Pedido *f;
+    int achou = 0;
+    rewind(in);
+
+    while ((f = lePedido(in)) != NULL){
+
+        if(f->codigo == chave){
+           achou = 1;
+           break;
+        }
+    }
+        if(achou == 1)
+            return f;
+        else printf("\nPedido nao encontrado");
 
     free(f);
     return NULL; // Retorna NULL se não encontrar

@@ -43,7 +43,6 @@ void imprimeProduto(Produto *prod) {
     printf("\n**********************************************");
 }
 
-// Função para remover um produto pelo código
 void removeProduto(int codigo, FILE *arquivo) {
     FILE *temp = fopen("temp.dat", "wb");
     if (!temp) {
@@ -83,7 +82,6 @@ void removeProduto(int codigo, FILE *arquivo) {
             return;
         }   
 }
-
 
 void imprimirBaseProdutos(FILE *out) {
     printf("\nImprimindo a base de dados...\n");
@@ -231,6 +229,45 @@ void imprimePedido(Pedido *ped) {
     printf("\nQuantidade: %d", ped->quantidade);
     printf("\nTotal: %.2f", ped->total);
     printf("\n**********************************************");
+}
+
+void removePedido(int codigo, FILE *arquivo){
+    FILE *temp = fopen("temp.dat", "wb");
+    if (!temp) {
+        perror("Nao foi possivel abrir o arquivo temporario para escrita");
+        return;
+    }
+
+    Pedido *ped;
+    int found = 0;
+
+    fseek(arquivo, 0, SEEK_SET); // Posiciona o ponteiro no início do arquivo
+
+    while ((ped = lePedido(arquivo)) != NULL) {
+        if (ped->codigo == codigo) {
+            found = 1;
+            free(ped);
+        } else {
+            salvaPedido(ped, temp);
+            free(ped);
+        }
+    }
+    fclose(temp);
+
+    if (found) {
+        fclose(arquivo);
+        remove("pedidos.dat");          // Remove o arquivo original
+        rename("temp.dat", "pedidos.dat"); // Renomeia o arquivo temporário
+        printf("Cliente com codigo %d removido com sucesso.\n", codigo);
+    } else {
+        remove("temp.dat");              // Remove o arquivo temporário
+        printf("Cliente com codigo %d nao encontrado.\n", codigo);
+    }
+    arquivo = fopen("clientess.dat", "rb");
+    if (!arquivo) {
+        perror("Nao foi possivel reabrir o arquivo pedidos.dat");
+        return;
+    } 
 }
 
 void imprimirBasePedido(FILE *out){
