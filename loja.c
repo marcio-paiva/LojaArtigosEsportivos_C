@@ -15,6 +15,19 @@ Produto* criaProduto(int codigo, char *nome, double preco, int quantidade) {
     return prod;
 }
 
+int codigoExiste(int codigo, FILE* arq_prod) {
+    rewind(arq_prod); // Volta ao início do arquivo
+    Produto* prod;
+    while ((prod = leProduto(arq_prod)) != NULL) {
+        if (prod->codigo == codigo) {
+            free(prod);
+            return 1; // Código já existe
+        }
+        free(prod);
+    }
+    return 0; // Código não existe
+}
+
 void salvaProduto(Produto *prod, FILE *out) {
     fwrite(&prod->codigo, sizeof(int), 1, out);
     fwrite(prod->nome, sizeof(char), sizeof(prod->nome), out);
@@ -71,10 +84,10 @@ void removeProduto(int codigo, FILE *arquivo) {
         fclose(arquivo);
         remove("produtos.dat");          // Remove o arquivo original
         rename("temp.dat", "produtos.dat"); // Renomeia o arquivo temporário
-        printf("Produto com codigo %d removido com sucesso.\n", codigo);
+        printf("\nProduto com codigo %d removido com sucesso.\n", codigo);
     } else {
         remove("temp.dat");              // Remove o arquivo temporário
-        printf("Produto com codigo %d não encontrado.\n", codigo);
+        printf("\nProduto com codigo %d não encontrado.\n", codigo);
     }
      arquivo = fopen("produtos.dat", "rb");
         if (!arquivo) {

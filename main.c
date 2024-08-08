@@ -114,6 +114,10 @@ int main() {
                         //ADICIONAR PRODUTO NA BASE
                         printf("Informe o codigo do produto: ");
                         scanf("%d", &codigo);
+                        if(codigoExiste(codigo, arq_prod)){
+                            printf("\nErro: Codigo do produto j existe!\n\n");
+                            break;
+                        }
                         getchar();
                         printf("Informe o nome do produto: ");
                         fgets(nome, sizeof(nome), stdin);
@@ -300,9 +304,9 @@ int main() {
                 imprimirBasePedido(arq_ped);
                 break;
 
-            case 4:
-                //BUSCA SEQUENCIAL NA BASE DE PEDIDOS
-                printf("\n\nDigite o codigo do pedido para buscar: ");
+  /*         case 4:
+               //BUSCA SEQUENCIAL NA BASE DE PEDIDOS
+               printf("\n\nDigite o codigo do pedido para buscar: ");
                 scanf("%d", &chave);
                 Pedido *resultado_ped = buscaSequencialPedido(chave, arq_ped);
                 if (resultado_ped != NULL) {
@@ -316,14 +320,14 @@ int main() {
                 printf("\n\nDigite o codigo do pedido para buscar: ");
                 scanf("%d", &chave);
                 selectionSortPedidos(arq_cli, TAM_PEDIDOS); // ORDENAR ANTES
-                resultado_ped = buscaBinariaPedido(chave, arq_ped, TAM_PEDIDOS);
+         //       resultado_ped = buscaBinariaPedido(chave, arq_ped, TAM_PEDIDOS);
                 if (resultado_ped != NULL) {
                     imprimePedido(resultado_ped);
                     free(resultado_ped);
                 }else{
                     printf("\nPedido nao encontrado.\n\n");
                 }
-
+*/
             case 6:
                 //ORDENA BASE DE Pedidos - SELECTION SORT (Retorna tempo de execução)
                 start_time = clock();

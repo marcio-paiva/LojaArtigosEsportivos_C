@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 Produto* buscaBinariaProduto(int chave, FILE *in, int tam) {
+    int achou = 0;
     int comparacoes = 0; // Inicializa o contador de comparações
     int esq = 0;
     int dir = tam - 1;
@@ -19,6 +20,7 @@ Produto* buscaBinariaProduto(int chave, FILE *in, int tam) {
         comparacoes++; // Conta a comparação realizada
 
         if (f->codigo == chave) {
+            achou = 1;
             free(f); // Libera o registro lido
             printf("Número de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
             return f;
@@ -29,7 +31,13 @@ Produto* buscaBinariaProduto(int chave, FILE *in, int tam) {
         }
 
         free(f); // Libera o registro lido
-    }
+    } 
+     if(achou = 0){
+         printf("Produto com código %d não encontrado.\n", chave);
+        printf("Numero de comparacees: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+        return NULL; // Retorna NULL se não encontrar
+    
+     }
 
     printf("Numero de comparacees: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
     return NULL; // Retorna NULL se não encontrar

@@ -5,64 +5,55 @@
 #include "loja.h"
 #include "buscaSequencial.h"
 
-Produto *buscaSequencialProduto(int chave, FILE *in){
-
+Produto* buscaSequencialProduto(int chave, FILE *in) {
     Produto *f;
+    int comparacoes = 0; // Inicializa o contador de comparações
     int achou = 0;
     rewind(in);
 
-    while ((f = leProduto(in)) != NULL){
+    while ((f = leProduto(in)) != NULL) {
+        comparacoes++; // Conta a comparação realizada
 
-        if(f->codigo == chave){
-           achou = 1;
-           break;
+        if (f->codigo == chave) {
+            achou = 1;
+            break;
         }
     }
-        if(achou == 1)
-            return f;
-        else printf("\nProduto nao encontrado");
+
+    if (achou == 1) {
+        printf("Número de comparações: %d\n", comparacoes); // Imprime o número de comparações
+        return f;
+    } else {
+        printf("\nProduto não encontrado\n\n");
+        printf("Número de comparações: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+    }
 
     free(f);
     return NULL; // Retorna NULL se não encontrar
 }
 
-Cliente *buscaSequencialCliente(int chave, FILE *in){
-
+Cliente* buscaSequencialCliente(int chave, FILE *in) {
     Cliente *f;
+    int comparacoes = 0; // Inicializa o contador de comparações
     int achou = 0;
     rewind(in);
 
-    while ((f = leCliente(in)) != NULL){
+    while ((f = leCliente(in)) != NULL) {
+        comparacoes++; // Conta a comparação realizada
 
-        if(f->codigo == chave){
-           achou = 1;
-           break;
+        if (f->codigo == chave) {
+            achou = 1;
+            break;
         }
     }
-        if(achou == 1)
-            return f;
-        else printf("\nCliente nao encontrado");
 
-    free(f);
-    return NULL; // Retorna NULL se não encontrar
-}
-
-Pedido *buscaSequencialPedido(int chave, FILE *in){
-
-    Pedido *f;
-    int achou = 0;
-    rewind(in);
-
-    while ((f = lePedido(in)) != NULL){
-
-        if(f->codigo == chave){
-           achou = 1;
-           break;
-        }
+    if (achou == 1) {
+        printf("Número de comparações: %d\n", comparacoes); // Imprime o número de comparações
+        return f;
+    } else {
+        printf("\nCliente não encontrado\n\n");
+        printf("Número de comparações: %d\n", comparacoes); 
     }
-        if(achou == 1)
-            return f;
-        else printf("\nPedido nao encontrado");
 
     free(f);
     return NULL; // Retorna NULL se não encontrar

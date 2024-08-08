@@ -63,5 +63,5 @@ void embaralha(int *array, int n);
 void criarBaseProdutos(FILE *out, int tam);
 void criarBaseClientes(FILE *out, int tam);
 void criarBasePedidos(FILE *out, int tam);
-
+int codigoExiste(int codigo, FILE* arq_prod);
 #endif // ARTIGOS_ESPORTIVOS_H
