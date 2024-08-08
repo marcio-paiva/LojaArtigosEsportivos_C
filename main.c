@@ -338,22 +338,45 @@ int main() {
                 printf("Informe o codigo do pedido: ");
                 scanf("%d", &codigo);
                 if(codigoExistePed(codigo, arq_ped)){
-                        printf("\nErro: Codigo do Pedido ja existe!\n\n");
-                        break;
-                    }
+                    printf("\nErro: Codigo do Pedido ja existe!\n\n");
+                    break;
+                }
+                //VINCULA PEDIDO AO CLIENTE
                 printf("Informe o codigo do cliente: ");
                 scanf("%d", &codigo_cli);
-                printf("Informe o codigo do produto: ");
+                Cliente* cliente_atual;
+                if(codigoExisteCli(codigo_cli, arq_cli)){
+                    printf("Ordenando base para buscar cliente, ");
+                    selectionSortClientes(arq_cli, TAM_CLIENTES);
+                    cliente_atual = buscaBinariaCliente(codigo_cli, arq_cli, TAM_CLIENTES);
+                    imprimeCliente(cliente_atual);
+                }else{
+                    printf("\nErro: O codigo nao esta vinculado a nenhum cliente!\n\n");
+                    break;
+                }
+                //VINCULA PEDIDO AO PRODUTO
+                printf("\nInforme o codigo do produto: ");
                 scanf("%d", &codigo_prod);
-                printf("Informe a quantidade: ");
-                scanf("%d", &quantidade);
-                printf("Informe o codigo do pedido: ");
-                scanf("%lf", &total);
+                Produto* prod_comprado;
+                if(codigoExisteProd(codigo_prod, arq_prod)){
+                    printf("Ordenando base para buscar produto, ");
+                    selectionSortProdutos(arq_prod, TAM_PRODUTOS);
+                    prod_comprado = buscaBinariaProduto(codigo_prod, arq_prod, TAM_PRODUTOS);
+                    imprimeProduto(prod_comprado);
+                }else{
+                    printf("\nErro: O codigo nao esta vinculado a nenhum produto!\n\n");
+                    break;
+                }
+                printf("\nInforme a quantidade: ");
+                scanf("%d", &quantidade);                      
+                total = (prod_comprado->preco * quantidade);
+                printf("Valor total do pedido: %lf", total);
+                free(prod_comprado);
                 TAM_PEDIDOS += 1;
                 Pedido* pedido = criaPedido(codigo, codigo_cli, codigo_prod, quantidade, total);
                 salvaPedido(pedido, arq_ped);
+                printf("\n\nPedido adicionado com sucesso:\n");
                 imprimePedido(pedido);
-                printf("\nPedido adicionado com sucesso!");
                 break;
 
             case 7:
@@ -383,6 +406,8 @@ int main() {
             break;
         }
     } while (opcao_geral != 0);
+
+    system("pause");
 
     fclose(arq_prod);
     fclose(arq_cli);
