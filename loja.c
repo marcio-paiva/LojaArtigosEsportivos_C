@@ -47,24 +47,6 @@ Produto* leProduto(FILE *in) {
     return prod;
 }
 
-void criarBaseProdutos(FILE *out, int tam) {
-    int ids[tam];
-    for (int i = 0; i < tam; i++) {
-        ids[i] = i + 1;
-    }
-
-    // Embaralha os IDs para criar produtos em ordem aleatória
-    embaralha(ids, tam);
-
-    Produto *p;
-    for (int i = 0; i < tam; i++) {
-        p = criaProduto(ids[i], "Produto", 10.0 * (ids[i]), tam - i);
-        salvaProduto(p, out);
-        free(p);
-    }
-    printf("\n\nBase criada com sucesso\n\n");
-}
-
 void imprimeProduto(Produto *prod) {
     printf("**********************************************");
     printf("\nProduto de codigo %d", prod->codigo);
@@ -138,6 +120,19 @@ Cliente* criaCliente(int codigo, char *nome, char *cpf, char *endereco) {
     return cli;
 }
 
+int codigoExisteCli(int codigo, FILE* arq_cli) {
+    rewind(arq_cli); // Volta ao início do arquivo
+    Cliente* cli;
+    while ((cli = leCliente(arq_cli)) != NULL) {
+        if (cli->codigo == codigo) {
+            free(cli);
+            return 1; // Código já existe
+        }
+        free(cli);
+    }
+    return 0; // Código não existe
+}
+
 void salvaCliente(Cliente *cli, FILE *out) {
     fwrite(&cli->codigo, sizeof(int), 1, out);
     fwrite(cli->nome, sizeof(char), sizeof(cli->nome), out);
@@ -155,22 +150,6 @@ Cliente* leCliente(FILE *in) {
     fread(cli->cpf, sizeof(char), sizeof(cli->cpf), in);
     fread(cli->endereco, sizeof(char), sizeof(cli->endereco), in);
     return cli;
-}
-
-void criarBaseClientes(FILE *out, int tam) {
-    int ids[tam];
-    for (int i = 0; i < tam; i++) {
-        ids[i] = i + 1;
-    }
-
-    // Embaralha os IDs para criar clientes em ordem aleatória
-    embaralha(ids, tam);
-    Cliente *c;
-    for (int i = 0; i < tam; i++) {
-        c = criaCliente(ids[i], "Cliente", "000.000.000-00", "Endereco");
-        salvaCliente(c, out);
-        free(c);
-    }
 }
 
 void imprimeCliente(Cliente *cli) {
@@ -213,7 +192,7 @@ void removeCliente(int codigo, FILE *arquivo) {
         printf("Cliente com codigo %d removido com sucesso.\n", codigo);
     } else {
         remove("temp.dat");              // Remove o arquivo temporário
-        printf("Cliente com codigo %d nao encontrado.\n", codigo);
+        printf("Cliente com codigo %d não encontrado.\n", codigo);
     }
     arquivo = fopen("clientes.dat", "rb");
     if (!arquivo) {
@@ -247,6 +226,19 @@ Pedido* criaPedido(int codigo, int codigo_cliente, int codigo_produto, int quant
     return ped;
 }
 
+int codigoExistePed(int codigo, FILE* arq_ped) {
+    rewind(arq_ped); // Volta ao início do arquivo
+    Pedido* ped;
+    while ((ped = lePedido(arq_ped)) != NULL) {
+        if (ped->codigo == codigo) {
+            free(ped);
+            return 1; // Código já existe
+        }
+        free(ped);
+    }
+    return 0; // Código não existe
+}
+
 void salvaPedido(Pedido *ped, FILE *out) {
     fwrite(&ped->codigo, sizeof(int), 1, out);
     fwrite(&ped->codigo_cliente, sizeof(int), 1, out);
@@ -266,22 +258,6 @@ Pedido* lePedido(FILE *in) {
     fread(&ped->quantidade, sizeof(int), 1, in);
     fread(&ped->total, sizeof(double), 1, in);
     return ped;
-}
-
-void criarBasePedidos(FILE *out, int tam) {
-    int ids[tam];
-    for (int i = 0; i < tam; i++) {
-        ids[i] = i + 1;
-    }
-
-    // Embaralha os IDs para criar clientes em ordem aleatória
-    embaralha(ids, tam);
-    Pedido *ped;
-    for (int i = 0; i < tam; i++) {
-        ped = criaPedido(ids[i], (i % 10) + 1, (i % 10) + 1, 1, 10.0 * (i + 1));
-        salvaPedido(ped, out);
-         free(ped);
-    }
 }
 
 void imprimePedido(Pedido *ped) {
@@ -373,6 +349,7 @@ int qtdRegistros(FILE *arq, int tamanho_registro) {
     return (int)(ftell(arq) / tamanho_registro);
 }
 
+// Função para embaralhar um vetor
 void embaralha(int *array, int n) {
     if (n > 1) {
         srand(time(NULL));
@@ -382,5 +359,55 @@ void embaralha(int *array, int n) {
             array[j] = array[i];
             array[i] = t;
         }
+    }
+}
+
+void criarBaseProdutos(FILE *out, int tam) {
+    int ids[tam];
+    for (int i = 0; i < tam; i++) {
+        ids[i] = i + 1;
+    }
+
+    // Embaralha os IDs para criar produtos em ordem aleatória
+    embaralha(ids, tam);
+
+    Produto *p;
+    for (int i = 0; i < tam; i++) {
+        p = criaProduto(ids[i], "Produto", 10.0 * (ids[i]), tam - i);
+        salvaProduto(p, out);
+        free(p);
+    }
+    printf("\n\nBase criada com sucesso\n\n");
+}
+
+void criarBaseClientes(FILE *out, int tam) {
+    int ids[tam];
+    for (int i = 0; i < tam; i++) {
+        ids[i] = i + 1;
+    }
+
+    // Embaralha os IDs para criar clientes em ordem aleatória
+    embaralha(ids, tam);
+    Cliente *c;
+    for (int i = 0; i < tam; i++) {
+        c = criaCliente(ids[i], "Cliente", "000.000.000-00", "Endereco");
+        salvaCliente(c, out);
+        free(c);
+    }
+}
+
+void criarBasePedidos(FILE *out, int tam) {
+    int ids[tam];
+    for (int i = 0; i < tam; i++) {
+        ids[i] = i + 1;
+    }
+
+    // Embaralha os IDs para criar clientes em ordem aleatória
+    embaralha(ids, tam);
+    Pedido *ped;
+    for (int i = 0; i < tam; i++) {
+        ped = criaPedido(ids[i], (i % 10) + 1, (i % 10) + 1, 1, 10.0 * (i + 1));
+        salvaPedido(ped, out);
+         free(ped);
     }
 }

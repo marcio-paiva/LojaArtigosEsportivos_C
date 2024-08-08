@@ -103,7 +103,7 @@ int main() {
                         time = (end_time - start_time) / 1000.0;
                         if (resultado_prod != NULL) {
                             imprimeProduto(resultado_prod);
-                            printf("\nTempo de execucao da busca binaria dos produtos: %.6f segundos\n", time);
+                            printf("\nTempo de execucao da busca binária dos produtos: %.6f segundos\n", time);
                             free(resultado_prod);
                         }else{
                             printf("\nProduto nao encontrado.\n\n");
@@ -225,6 +225,10 @@ int main() {
                         //ADICIONAR CLIENTE NA BASE
                         printf("Informe o codigo do cliente: ");
                         scanf("%d", &codigo);
+                        if(codigoExisteCli(codigo, arq_cli)){
+                            printf("\nErro: Codigo do Cliente ja existe!\n\n");
+                            break;
+                        }
                         getchar(); //captura o /n
                         printf("Informe o nome do cliente: ");
                         fgets(nome, sizeof(nome), stdin);
@@ -239,7 +243,7 @@ int main() {
                         Cliente* cliente = criaCliente(codigo, nome, cpf, endereco);
                         salvaCliente(cliente, arq_cli);
                         imprimeCliente(cliente);
-                        printf("\nCriado com sucesso!\n");
+                        printf("\nCriado com sucesso!");
                         break;
 
                     case 7:
@@ -302,7 +306,7 @@ int main() {
                 time = (end_time - start_time) / 1000.0;
                 if (resultado_ped != NULL) {
                     imprimePedido(resultado_ped);
-                    printf("\nTempo de execucao da busca sequencial do pedido: %.6f segundos\n", time);
+                    printf("\nTempo de execucao da busca sequencial dos pedidos: %.6f segundos\n", time);
                     free(resultado_ped);
                 }
                 break;
@@ -323,16 +327,21 @@ int main() {
                 time = (end_time - start_time) / 1000.0;
                 if (resultado_ped != NULL) {
                     imprimePedido(resultado_ped);
-                    printf("\nTempo de execucao da busca binaria do pedido: %.6f segundos\n", time);
+                    printf("\nTempo de execucao da busca binaria dos pedidos: %.6f segundos\n", time);
                     free(resultado_ped);
                 }else{
                     printf("\nPedido nao encontrado.\n\n");
                 }
                 break;
+
             case 6:
                 //ADICIONAR PEDIDO NA BASE
                 printf("Informe o codigo do pedido: ");
                 scanf("%d", &codigo);
+                if(codigoExistePed(codigo, arq_ped)){
+                        printf("\nErro: Codigo do Pedido ja existe!\n\n");
+                        break;
+                    }
                 printf("Informe o codigo do cliente: ");
                 scanf("%d", &codigo_cli);
                 printf("Informe o codigo do produto: ");
