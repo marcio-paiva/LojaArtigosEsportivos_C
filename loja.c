@@ -282,9 +282,16 @@ void criarBaseProdutos(FILE *out, int tam) {
 }
 
 void criarBaseClientes(FILE *out, int tam) {
+    int ids[tam];
+    for (int i = 0; i < tam; i++) {
+        ids[i] = i + 1;
+    }
+
+    // Embaralha os IDs para criar clientes em ordem aleatória
+    embaralha(ids, tam);
     Cliente *c;
     for (int i = 0; i < tam; i++) {
-        c = criaCliente(i + 1, "Cliente", "000.000.000-00", "Endereco");
+        c = criaCliente(ids[i], "Cliente", "000.000.000-00", "Endereco");
         salvaCliente(c, out);
         free(c);
     }
