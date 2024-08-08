@@ -22,7 +22,7 @@ Produto* buscaBinariaProduto(int chave, FILE *in, int tam) {
         if (f->codigo == chave) {
             achou = 1;
             free(f); // Libera o registro lido
-            printf("Número de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
+            printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
             return f;
         } else if (f->codigo < chave) {
             esq = meio + 1;
@@ -32,9 +32,15 @@ Produto* buscaBinariaProduto(int chave, FILE *in, int tam) {
 
         free(f); // Libera o registro lido
     } 
+<<<<<<< HEAD
      if(achou == 0){
          printf("Produto com código %d não encontrado.\n", chave);
         printf("Numero de comparacees: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+=======
+     if(achou = 0){
+         printf("Produto com codigo %d nao encontrado.\n", chave);
+        printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+>>>>>>> e5326e796f36eb5c5ba1dfdf2c3d31dbe32ddf8c
         return NULL; // Retorna NULL se não encontrar
     
      }
@@ -72,7 +78,7 @@ Cliente* buscaBinariaCliente(int chave, FILE *in, int tam) {
     }
     if(achou == 0){
         printf("Produto com codigo %d nao encontrado.\n", chave);
-        printf("Numero de comparacees: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+        printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
         return NULL; // Retorna NULL se não encontrar
     
      }
@@ -110,7 +116,7 @@ Pedido* buscaBinariaPedido(int chave, FILE *in, int tam) {
     }
     if(achou == 0){
         printf("Produto com codigo %d nao encontrado.\n", chave);
-        printf("Numero de comparacees: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+        printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
         return NULL; // Retorna NULL se não encontrar
     }
 
