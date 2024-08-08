@@ -10,7 +10,7 @@
 int main() {
 
     clock_t start_time, end_time; double time;
-    int TAM_PRODUTOS = 1000; //ALTERAR TAMANHO DA BASE DE PRODUTOS AQUI
+    int TAM_PRODUTOS = 1000 //ALTERAR TAMANHO DA BASE DE PRODUTOS AQUI
     int TAM_CLIENTES = 1000; //ALTERAR TAMANHO DA BASE DE CLIENTES AQUI
     int TAM_PEDIDOS = 10; //NÃO ALTERAR TAMANHO 
 
@@ -319,7 +319,6 @@ int main() {
                 selectionSortPedidos(arq_ped, TAM_PEDIDOS); // ORDENAR ANTES
                 end_time = clock();
                 time = (end_time - start_time) / 1000.0;
-                printf("teste");
                 printf("\nTempo de execucao da ordenacao dos pedidos: %.6f segundos\n", time);
                 start_time = clock();
                 resultado_ped = buscaBinariaPedido(chave, arq_ped, TAM_PEDIDOS);

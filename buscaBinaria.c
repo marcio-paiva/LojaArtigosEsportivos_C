@@ -21,7 +21,6 @@ Produto* buscaBinariaProduto(int chave, FILE *in, int tam) {
 
         if (f->codigo == chave) {
             achou = 1;
-            free(f); // Libera o registro lido
             printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
             return f;
         } else if (f->codigo < chave) {
@@ -32,7 +31,7 @@ Produto* buscaBinariaProduto(int chave, FILE *in, int tam) {
 
         free(f); // Libera o registro lido
     } 
-     if(achou = 0){
+     if(achou == 0){
          printf("Produto com codigo %d nao encontrado.\n", chave);
         printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
         return NULL; // Retorna NULL se não encontrar
