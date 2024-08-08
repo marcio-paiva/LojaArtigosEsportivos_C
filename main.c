@@ -103,7 +103,7 @@ int main() {
                         time = (end_time - start_time) / 1000.0;
                         if (resultado_prod != NULL) {
                             imprimeProduto(resultado_prod);
-                            printf("\nTempo de execucao da busca binária dos produtos: %.6f segundos\n", time);
+                            printf("\nTempo de execucao da busca binaria dos produtos: %.6f segundos\n", time);
                             free(resultado_prod);
                         }else{
                             printf("\nProduto nao encontrado.\n\n");
@@ -239,7 +239,7 @@ int main() {
                         Cliente* cliente = criaCliente(codigo, nome, cpf, endereco);
                         salvaCliente(cliente, arq_cli);
                         imprimeCliente(cliente);
-                        printf("\nCriado com sucesso!");
+                        printf("\nCriado com sucesso!\n");
                         break;
 
                     case 7:
@@ -302,7 +302,7 @@ int main() {
                 time = (end_time - start_time) / 1000.0;
                 if (resultado_ped != NULL) {
                     imprimePedido(resultado_ped);
-                    printf("\nTempo de execucao da busca sequencial dos pedidos: %.6f segundos\n", time);
+                    printf("\nTempo de execucao da busca sequencial do pedido: %.6f segundos\n", time);
                     free(resultado_ped);
                 }
                 break;
@@ -322,7 +322,7 @@ int main() {
                 time = (end_time - start_time) / 1000.0;
                 if (resultado_ped != NULL) {
                     imprimePedido(resultado_ped);
-                    printf("\nTempo de execucao da busca binaria dos pedidos: %.6f segundos\n", time);
+                    printf("\nTempo de execucao da busca binaria do pedido: %.6f segundos\n", time);
                     free(resultado_ped);
                 }else{
                     printf("\nPedido nao encontrado.\n\n");

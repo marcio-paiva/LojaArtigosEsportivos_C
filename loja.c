@@ -213,7 +213,7 @@ void removeCliente(int codigo, FILE *arquivo) {
         printf("Cliente com codigo %d removido com sucesso.\n", codigo);
     } else {
         remove("temp.dat");              // Remove o arquivo temporário
-        printf("Cliente com codigo %d não encontrado.\n", codigo);
+        printf("Cliente com codigo %d nao encontrado.\n", codigo);
     }
     arquivo = fopen("clientes.dat", "rb");
     if (!arquivo) {
