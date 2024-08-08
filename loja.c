@@ -15,7 +15,7 @@ Produto* criaProduto(int codigo, char *nome, double preco, int quantidade) {
     return prod;
 }
 
-int codigoExiste(int codigo, FILE* arq_prod) {
+int codigoExisteProd(int codigo, FILE* arq_prod) {
     rewind(arq_prod); // Volta ao início do arquivo
     Produto* prod;
     while ((prod = leProduto(arq_prod)) != NULL) {

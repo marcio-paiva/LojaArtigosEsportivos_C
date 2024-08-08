@@ -114,7 +114,7 @@ int main() {
                         //ADICIONAR PRODUTO NA BASE
                         printf("Informe o codigo do produto: ");
                         scanf("%d", &codigo);
-                        if(codigoExiste(codigo, arq_prod)){
+                        if(codigoExisteProd(codigo, arq_prod)){
                             printf("\nErro: Codigo do produto ja existe!\n\n");
                             break;
                         }
@@ -315,6 +315,7 @@ int main() {
                 selectionSortPedidos(arq_ped, TAM_PEDIDOS); // ORDENAR ANTES
                 end_time = clock();
                 time = (end_time - start_time) / 1000.0;
+                printf("teste");
                 printf("\nTempo de execucao da ordenacao dos pedidos: %.6f segundos\n", time);
                 start_time = clock();
                 resultado_ped = buscaBinariaPedido(chave, arq_ped, TAM_PEDIDOS);
