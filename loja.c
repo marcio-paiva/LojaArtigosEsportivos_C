@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-// Fun��es relacionadas ao Produto
+// Funcoes relacionadas ao Produto
 Produto* criaProduto(int codigo, char *nome, double preco, int quantidade) {
     Produto *prod = (Produto *) malloc(sizeof(Produto));
     if (prod) {
@@ -47,7 +47,7 @@ void imprimeProduto(Produto *prod) {
 void removeProduto(int codigo, FILE *arquivo) {
     FILE *temp = fopen("temp.dat", "wb");
     if (!temp) {
-        perror("Não foi possível abrir o arquivo temporário para escrita");
+        perror("Nao foi possivel abrir o arquivo temporario para escrita");
         return;
     }
 
@@ -77,7 +77,13 @@ void removeProduto(int codigo, FILE *arquivo) {
         remove("temp.dat");              // Remove o arquivo temporário
         printf("Produto com codigo %d não encontrado.\n", codigo);
     }
+     arquivo = fopen("produtos.dat", "rb");
+        if (!arquivo) {
+            perror("Nao foi possivel reabrir o arquivo produtos.dat");
+            return;
+        }   
 }
+
 
 void imprimirBaseProdutos(FILE *out) {
     printf("\nImprimindo a base de dados...\n");
@@ -134,7 +140,7 @@ void imprimeCliente(Cliente *cli) {
 void removeCliente(int codigo, FILE *arquivo) {
     FILE *temp = fopen("temp.dat", "wb");
     if (!temp) {
-        perror("Não foi possível abrir o arquivo temporário para escrita");
+        perror("Nao foi possivel abrir o arquivo temporario para escrita");
         return;
     }
 
@@ -164,6 +170,11 @@ void removeCliente(int codigo, FILE *arquivo) {
         remove("temp.dat");              // Remove o arquivo temporário
         printf("Cliente com codigo %d não encontrado.\n", codigo);
     }
+    arquivo = fopen("clientess.dat", "rb");
+    if (!arquivo) {
+        perror("Nao foi possivel reabrir o arquivo clientes.dat");
+        return;
+    }   
 }
 
 void imprimirBaseCliente(FILE *out){
@@ -178,7 +189,7 @@ void imprimirBaseCliente(FILE *out){
     }
 }
 
-// Fun��es relacionadas ao Pedido
+// Funcoes relacionadas ao Pedido
 Pedido* criaPedido(int codigo, int codigo_cliente, int codigo_produto, int quantidade, double total) {
     Pedido *ped = (Pedido *) malloc(sizeof(Pedido));
     if (ped) {
@@ -222,25 +233,25 @@ void imprimePedido(Pedido *ped) {
     printf("\n**********************************************");
 }
 
-// Fun��es auxiliares
+// Funcoes auxiliares
 int tamanhoRegistroProduto() {
-    return sizeof(int)         // c�digo
+    return sizeof(int)         // codigo
            + sizeof(char) * 50 // nome
-           + sizeof(double)    // pre�o
+           + sizeof(double)    // preco
            + sizeof(int);      // quantidade
 }
 
 int tamanhoRegistroCliente() {
-    return sizeof(int)         // c�digo
+    return sizeof(int)         // codigo
            + sizeof(char) * 50 // nome
            + sizeof(char) * 15 // cpf
-           + sizeof(char) * 100; // endere�o
+           + sizeof(char) * 100; // endereco
 }
 
 int tamanhoRegistroPedido() {
-    return sizeof(int)         // c�digo
-           + sizeof(int)       // c�digo_cliente
-           + sizeof(int)       // c�digo_produto
+    return sizeof(int)         // codigo
+           + sizeof(int)       // codigo_cliente
+           + sizeof(int)       // codigo_produto
            + sizeof(int)       // quantidade
            + sizeof(double);   // total
 }
