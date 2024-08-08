@@ -45,9 +45,9 @@ int main() {
                 printf("\nMenu de Produtos:\n");
                 printf("1. Gerar Base de Produtos\n");
                 printf("2. Ler Arquivo dos Produtos\n");
-                printf("3. Busca Sequencial\n");
-                printf("4. Busca Binaria\n");
-                printf("5. Ordenar Produtos\n");
+                printf("3. Ordenar Produtos\n");
+                printf("4. Busca Sequencial\n");
+                printf("5. Busca Binaria\n");
                 printf("6. Adicionar Produto\n");
                 printf("7. Remover Produto\n");
                 printf("0. Voltar\n");
@@ -65,6 +65,15 @@ int main() {
                         break;
 
                     case 3:
+                        //ORDENA BASE DE PRODUTOS - SELECTION SORT (Retorna tempo de execução)
+                        start_time = clock();
+                        selectionSortProdutos(arq_prod, TAM_PRODUTOS);
+                        end_time = clock();
+                        time = (end_time - start_time) / 1000.0;
+                        printf("\nTempo de execucao da ordenacao dos produtos: %.6f segundos\n", time);
+                        break;
+
+                    case 4:
                         //BUSCA SEQUENCIAL NA BASE DE PRODUTOS
                         printf("\n\nDigite o codigo do produto para buscar: ");
                         scanf("%d", &chave);
@@ -79,7 +88,7 @@ int main() {
                         }
                         break;
 
-                    case 4:
+                    case 5:
                         //BUSCA BINARIA NA BASE DE PRODUTOS
                         printf("\n\nDigite o codigo do produto para buscar: ");
                         scanf("%d", &chave);
@@ -99,15 +108,6 @@ int main() {
                         }else{
                             printf("\nProduto nao encontrado.\n\n");
                         }
-                        break;
-
-                    case 5:
-                        //ORDENA BASE DE PRODUTOS - SELECTION SORT (Retorna tempo de execução)
-                        start_time = clock();
-                        selectionSortProdutos(arq_prod, TAM_PRODUTOS);
-                        end_time = clock();
-                        time = (end_time - start_time) / 1000.0;
-                        printf("\nTempo de execucao da ordenacao dos produtos: %.6f segundos\n", time);
                         break;
 
                     case 6:
@@ -156,9 +156,9 @@ int main() {
                 printf("\nMenu de Clientes:\n");
                 printf("1. Gerar Base de Clientes\n");
                 printf("2. Ler Arquivo de Clientes\n");
-                printf("3. Busca Sequencial\n");
-                printf("4. Busca Binaria\n");
-                printf("5. Ordenar Clientes\n");
+                printf("3. Ordenar Clientes\n");
+                printf("4. Busca Sequencial\n");
+                printf("5. Busca Binaria\n");
                 printf("6. Adicionar Clientes\n");
                 printf("7. Remover Clientes\n");
                 printf("0. Voltar\n");
@@ -176,6 +176,15 @@ int main() {
                         break;
 
                     case 3:
+                        //ORDENA BASE DE CLIENTES - SELECTION SORT (Retorna tempo de execução)
+                        start_time = clock();
+                        selectionSortClientes(arq_cli, TAM_CLIENTES);
+                        end_time = clock();
+                        time = (end_time - start_time) / 1000.0;
+                        printf("\nTempo de execucao da ordenacao dos clientes: %.6f segundos\n", time);
+                        break;
+
+                    case 4:
                         //BUSCA SEQUENCIAL NA BASE DE CLIENTES
                         printf("\n\nDigite o codigo do cliente para buscar: ");
                         scanf("%d", &chave);
@@ -190,7 +199,7 @@ int main() {
                         }
                         break;
 
-                    case 4:
+                    case 5:
                         //BUSCA BINARIA NA BASE DE CLIENTES
                         printf("\n\nDigite o codigo do cliente para buscar: ");
                         scanf("%d", &chave);
@@ -210,15 +219,6 @@ int main() {
                         }else{
                             printf("\nCliente nao encontrado.\n\n");
                         }
-                        break;
-
-                    case 5:
-                        //ORDENA BASE DE CLIENTES - SELECTION SORT (Retorna tempo de execução)
-                        start_time = clock();
-                        selectionSortClientes(arq_cli, TAM_CLIENTES);
-                        end_time = clock();
-                        time = (end_time - start_time) / 1000.0;
-                        printf("\nTempo de execucao da ordenacao dos clientes: %.6f segundos\n", time);
                         break;
 
                     case 6:
@@ -263,46 +263,33 @@ int main() {
         case 3:
             do {
         printf("\n=== MENU DE PEDIDOS ===\n");
-        printf("1. Adicionar Pedido\n");
-        printf("2. Remover Pedido\n");
-        printf("3. Ler Arquivo de Pedidos\n");
+        printf("1. Criar Base de Pedidos\n");
+        printf("2. Ler Arquivo de Pedidos\n");
+        printf("3. Ordenar Base de Pedidos\n");
         printf("4. Busca Sequencial\n");
         printf("5. Busca Binaria\n");
-        printf("6. Ordenar Base de Pedidos\n");
-        printf("7. Criar Base de Pedidos\n");
+        printf("6. Adicionar Pedido\n");
+        printf("7. Remover Pedido\n");
         printf("0. Voltar\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
         switch (opcao){
             case 1:
-                //ADICIONAR PEDIDO NA BASE
-                printf("Informe o codigo do pedido: ");
-                scanf("%d", &codigo);
-                printf("Informe o codigo do cliente: ");
-                scanf("%d", &codigo_cli);
-                printf("Informe o codigo do produto: ");
-                scanf("%d", &codigo_prod);
-                printf("Informe a quantidade: ");
-                scanf("%d", &quantidade);
-                printf("Informe o codigo do pedido: ");
-                scanf("%lf", &total);
-                TAM_PEDIDOS += 1;
-                Pedido* pedido = criaPedido(codigo, codigo_cli, codigo_prod, quantidade, total);
-                salvaPedido(pedido, arq_ped);
-                imprimePedido(pedido);
-                printf("\nPedido adicionado com sucesso!");
+                //CRIA BASE DE PEDIDOS
+                criarBasePedidos(arq_ped, TAM_PEDIDOS);
                 break;
-
             case 2:
-                printf("Informe o codigo do pedido: ");
-                scanf("%d", &codigo);
-                removePedido(codigo, arq_ped);    
-                TAM_PEDIDOS -= 1;
-                break;
-
-            case 3:
                 //IMPRIME BASE DE PEDIDOS
                 imprimirBasePedido(arq_ped);
+                break;
+            
+            case 3:
+                //ORDENA BASE DE Pedidos - SELECTION SORT (Retorna tempo de execução)
+                start_time = clock();
+                selectionSortPedidos(arq_ped, TAM_PEDIDOS);
+                end_time = clock();
+                time = (end_time - start_time) / 1000.0;
+                printf("\nTempo de execucao da ordenacao dos pedidos: %.6f segundos\n", time);
                 break;
 
             case 4:
@@ -341,19 +328,32 @@ int main() {
                     printf("\nPedido nao encontrado.\n\n");
                 }
                 break;
-
             case 6:
-                //ORDENA BASE DE Pedidos - SELECTION SORT (Retorna tempo de execução)
-                start_time = clock();
-                selectionSortPedidos(arq_ped, TAM_PEDIDOS);
-                end_time = clock();
-                time = (end_time - start_time) / 1000.0;
-                printf("\nTempo de execucao da ordenacao dos pedidos: %.6f segundos\n", time);
+                //ADICIONAR PEDIDO NA BASE
+                printf("Informe o codigo do pedido: ");
+                scanf("%d", &codigo);
+                printf("Informe o codigo do cliente: ");
+                scanf("%d", &codigo_cli);
+                printf("Informe o codigo do produto: ");
+                scanf("%d", &codigo_prod);
+                printf("Informe a quantidade: ");
+                scanf("%d", &quantidade);
+                printf("Informe o codigo do pedido: ");
+                scanf("%lf", &total);
+                TAM_PEDIDOS += 1;
+                Pedido* pedido = criaPedido(codigo, codigo_cli, codigo_prod, quantidade, total);
+                salvaPedido(pedido, arq_ped);
+                imprimePedido(pedido);
+                printf("\nPedido adicionado com sucesso!");
                 break;
+
             case 7:
-                //CRIA BASE DE PEDIDOS
-                criarBasePedidos(arq_ped, TAM_PEDIDOS);
+                printf("Informe o codigo do pedido: ");
+                scanf("%d", &codigo);
+                removePedido(codigo, arq_ped);    
+                TAM_PEDIDOS -= 1;
                 break;
+
             case 0:
                 printf("Voltando...\n");
                 break;
@@ -374,8 +374,6 @@ int main() {
             break;
         }
     } while (opcao_geral != 0);
-
-    system("\n\npause");
 
     fclose(arq_prod);
     fclose(arq_cli);
