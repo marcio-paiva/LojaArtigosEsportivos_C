@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 
 // Funcoes relacionadas ao Produto
 Produto* criaProduto(int codigo, char *nome, double preco, int quantidade) {
@@ -108,6 +109,12 @@ void imprimirBaseProdutos(FILE *out) {
     }
 }
 
+int tamanhoArquivoProdutos(FILE *arq) {
+    fseek(arq, 0, SEEK_END);
+    int tam = trunc(ftell(arq) / tamanhoRegistroProduto());
+    return tam;
+}
+
 // Funcoes relacionadas ao Cliente
 Cliente* criaCliente(int codigo, char *nome, char *cpf, char *endereco) {
     Cliente *cli = (Cliente *) malloc(sizeof(Cliente));
@@ -211,6 +218,12 @@ void imprimirBaseCliente(FILE *out){
         imprimeCliente(item);
         free(item);
     }
+}
+
+int tamanhoArquivoClientes(FILE *arq) {
+    fseek(arq, 0, SEEK_END);
+    int tam = trunc(ftell(arq) / tamanhoRegistroCliente());
+    return tam;
 }
 
 // Funcoes relacionadas ao Pedido
@@ -319,6 +332,12 @@ void imprimirBasePedido(FILE *out){
         imprimePedido(item);
         free(item);
     }
+}
+
+int tamanhoArquivoPedidos(FILE *arq) {
+    fseek(arq, 0, SEEK_END);
+    int tam = trunc(ftell(arq) / tamanhoRegistroPedido());
+    return tam;
 }
 
 // Funcoes auxiliares

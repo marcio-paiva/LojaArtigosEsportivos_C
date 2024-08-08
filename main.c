@@ -6,14 +6,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#define TAM_PRODUTOS 1000 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
+#define TAM_CLIENTES 1000 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
+#define TAM_PEDIDOS 10 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 
 int main() {
-
-    clock_t start_time, end_time; double time;
-    int TAM_PRODUTOS = 1000; //ALTERAR TAMANHO DA BASE DE PRODUTOS AQUI
-    int TAM_CLIENTES = 1000; //ALTERAR TAMANHO DA BASE DE CLIENTES AQUI
-    int TAM_PEDIDOS = 10; //NÃO ALTERAR TAMANHO 
-
     FILE *arq_prod = fopen("produtos.dat", "wb+");
     FILE *arq_cli = fopen("clientes.dat", "wb+");
     FILE *arq_ped = fopen("pedidos.dat", "wb+");
@@ -23,8 +20,8 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    int opcao_geral;
-    
+    clock_t start_time, end_time; double time;
+    int opcao_geral; 
     do{
         printf("\nMenu de Geral:\n");
         printf("1. Menu de Produtos\n");
@@ -67,7 +64,7 @@ int main() {
                     case 3:
                         //ORDENA BASE DE PRODUTOS - SELECTION SORT (Retorna tempo de execução)
                         start_time = clock();
-                        selectionSortProdutos(arq_prod, TAM_PRODUTOS);
+                        selectionSortProdutos(arq_prod, tamanhoArquivoProdutos(arq_prod));
                         end_time = clock();
                         time = (end_time - start_time) / 1000.0;
                         printf("\nTempo de execucao da ordenacao dos produtos: %.6f segundos\n", time);
@@ -93,17 +90,17 @@ int main() {
                         printf("\n\nDigite o codigo do produto para buscar: ");
                         scanf("%d", &chave);
                         start_time = clock();
-                        selectionSortProdutos(arq_prod, TAM_PRODUTOS);
+                        selectionSortProdutos(arq_prod, tamanhoArquivoProdutos(arq_prod));
                         end_time = clock();
                         time = (end_time - start_time) / 1000.0;
-                         printf("\nTempo de execucao da ordenacao dos produtos: %.6f segundos\n", time);
-                         start_time = clock();
-                        resultado_prod = buscaBinariaProduto(chave, arq_prod, TAM_PRODUTOS);
+                        printf("\nTempo de execucao da ordenacao dos produtos: %.6f segundos\n", time);
+                        start_time = clock();
+                        resultado_prod = buscaBinariaProduto(chave, arq_prod, tamanhoArquivoProdutos(arq_prod));
                         end_time = clock();
                         time = (end_time - start_time) / 1000.0;
                         if (resultado_prod != NULL) {
                             imprimeProduto(resultado_prod);
-                            printf("\nTempo de execucao da busca binária dos produtos: %.6f segundos\n", time);
+                            printf("\nTempo de execucao da busca binaria dos produtos: %.6f segundos\n", time);
                             free(resultado_prod);
                         }else{
                             printf("\nProduto nao encontrado.\n\n");
@@ -126,7 +123,6 @@ int main() {
                         scanf("%lf", &preco);
                         printf("Informe a quantidade do produto: ");
                         scanf("%d", &quantidade);
-                        TAM_PRODUTOS += 1;
                         Produto* produto = criaProduto(codigo, nome, preco, quantidade);
                         salvaProduto(produto, arq_prod);
                         imprimeProduto(produto);
@@ -136,8 +132,7 @@ int main() {
                     case 7:
                         printf("Informe o codigo do produto: ");
                         scanf("%d", &codigo);
-                        removeProduto(codigo, arq_prod);    
-                        TAM_PRODUTOS -= 1;
+                        removeProduto(codigo, arq_prod);
                         break;
 
                     case 0:
@@ -178,7 +173,7 @@ int main() {
                     case 3:
                         //ORDENA BASE DE CLIENTES - SELECTION SORT (Retorna tempo de execução)
                         start_time = clock();
-                        selectionSortClientes(arq_cli, TAM_CLIENTES);
+                        selectionSortClientes(arq_cli, tamanhoArquivoClientes(arq_cli));
                         end_time = clock();
                         time = (end_time - start_time) / 1000.0;
                         printf("\nTempo de execucao da ordenacao dos clientes: %.6f segundos\n", time);
@@ -204,12 +199,12 @@ int main() {
                         printf("\n\nDigite o codigo do cliente para buscar: ");
                         scanf("%d", &chave);
                         start_time = clock();
-                        selectionSortClientes(arq_cli, TAM_CLIENTES); // ORDENAR ANTES
+                        selectionSortClientes(arq_cli, tamanhoArquivoClientes(arq_cli)); // ORDENAR ANTES
                         end_time = clock();
                         time = (end_time - start_time) / 1000.0;
                         printf("\nTempo de execucao da ordenacao dos clientes: %.6f segundos\n", time);
                         start_time = clock();
-                        resultado_cli = buscaBinariaCliente(chave, arq_cli, TAM_CLIENTES);
+                        resultado_cli = buscaBinariaCliente(chave, arq_cli, tamanhoArquivoClientes(arq_cli));
                         end_time = clock();
                         time = (end_time - start_time) / 1000.0;
                         if (resultado_cli != NULL) {
@@ -239,7 +234,6 @@ int main() {
                         printf("Informe o endereco do cliente: ");
                         fgets(endereco, sizeof(endereco), stdin);
                         endereco[strcspn(endereco, "\n")] = '\0'; // Remove a nova linha do final da string, se presente
-                        TAM_CLIENTES += 1;
                         Cliente* cliente = criaCliente(codigo, nome, cpf, endereco);
                         salvaCliente(cliente, arq_cli);
                         imprimeCliente(cliente);
@@ -249,8 +243,7 @@ int main() {
                     case 7:
                         printf("Informe o codigo do cliente: ");
                         scanf("%d", &codigo);
-                        removeCliente(codigo, arq_cli);    
-                        TAM_CLIENTES -= 1;
+                        removeCliente(codigo, arq_cli);
                         break;
 
                     case 0:
@@ -290,7 +283,7 @@ int main() {
             case 3:
                 //ORDENA BASE DE Pedidos - SELECTION SORT (Retorna tempo de execução)
                 start_time = clock();
-                selectionSortPedidos(arq_ped, TAM_PEDIDOS);
+                selectionSortPedidos(arq_ped, tamanhoArquivoPedidos(arq_ped));
                 end_time = clock();
                 time = (end_time - start_time) / 1000.0;
                 printf("\nTempo de execucao da ordenacao dos pedidos: %.6f segundos\n", time);
@@ -316,12 +309,12 @@ int main() {
                 printf("\n\nDigite o codigo do pedido para buscar: ");
                 scanf("%d", &chave);
                 start_time = clock();
-                selectionSortPedidos(arq_ped, TAM_PEDIDOS); // ORDENAR ANTES
+                selectionSortPedidos(arq_ped, tamanhoArquivoPedidos(arq_ped)); // ORDENAR ANTES
                 end_time = clock();
                 time = (end_time - start_time) / 1000.0;
                 printf("\nTempo de execucao da ordenacao dos pedidos: %.6f segundos\n", time);
                 start_time = clock();
-                resultado_ped = buscaBinariaPedido(chave, arq_ped, TAM_PEDIDOS);
+                resultado_ped = buscaBinariaPedido(chave, arq_ped, tamanhoArquivoPedidos(arq_ped));
                 end_time = clock();
                 time = (end_time - start_time) / 1000.0;
                 if (resultado_ped != NULL) {
@@ -347,8 +340,8 @@ int main() {
                 Cliente* cliente_atual;
                 if(codigoExisteCli(codigo_cli, arq_cli)){
                     printf("Ordenando base para buscar cliente, ");
-                    selectionSortClientes(arq_cli, TAM_CLIENTES);
-                    cliente_atual = buscaBinariaCliente(codigo_cli, arq_cli, TAM_CLIENTES);
+                    selectionSortClientes(arq_cli, tamanhoArquivoClientes(arq_cli));
+                    cliente_atual = buscaBinariaCliente(codigo_cli, arq_cli, tamanhoArquivoClientes(arq_cli));
                     imprimeCliente(cliente_atual);
                 }else{
                     printf("\nErro: O codigo nao esta vinculado a nenhum cliente!\n\n");
@@ -360,8 +353,8 @@ int main() {
                 Produto* prod_comprado;
                 if(codigoExisteProd(codigo_prod, arq_prod)){
                     printf("Ordenando base para buscar produto, ");
-                    selectionSortProdutos(arq_prod, TAM_PRODUTOS);
-                    prod_comprado = buscaBinariaProduto(codigo_prod, arq_prod, TAM_PRODUTOS);
+                    selectionSortProdutos(arq_prod, tamanhoArquivoProdutos(arq_prod));
+                    prod_comprado = buscaBinariaProduto(codigo_prod, arq_prod, tamanhoArquivoProdutos(arq_prod));
                     imprimeProduto(prod_comprado);
                 }else{
                     printf("\nErro: O codigo nao esta vinculado a nenhum produto!\n\n");
@@ -372,7 +365,7 @@ int main() {
                 total = (prod_comprado->preco * quantidade);
                 printf("Valor total do pedido: %lf", total);
                 free(prod_comprado);
-                TAM_PEDIDOS += 1;
+                free(cliente_atual);
                 Pedido* pedido = criaPedido(codigo, codigo_cli, codigo_prod, quantidade, total);
                 salvaPedido(pedido, arq_ped);
                 printf("\n\nPedido adicionado com sucesso:\n");
@@ -383,7 +376,6 @@ int main() {
                 printf("Informe o codigo do pedido: ");
                 scanf("%d", &codigo);
                 removePedido(codigo, arq_ped);    
-                TAM_PEDIDOS -= 1;
                 break;
 
             case 0:
@@ -406,8 +398,6 @@ int main() {
             break;
         }
     } while (opcao_geral != 0);
-
-    system("pause");
 
     fclose(arq_prod);
     fclose(arq_cli);

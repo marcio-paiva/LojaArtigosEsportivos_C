@@ -37,6 +37,7 @@ Produto* leProduto(FILE *in);
 void imprimeProduto(Produto *prod);
 void removeProduto(int codigo, FILE *arquivo);
 void imprimirBaseProdutos(FILE *out);
+int tamanhoArquivoProdutos(FILE *arq);
 
 // Funcoes relacionadas ao Cliente
 Cliente* criaCliente(int codigo, char *nome, char *cpf, char *endereco);
@@ -45,6 +46,7 @@ Cliente* leCliente(FILE *in);
 void imprimeCliente(Cliente *cli);
 void removeCliente(int codigo, FILE *arquivo);
 void imprimirBaseCliente(FILE *out);
+int tamanhoArquivoClientes(FILE *arq);
 
 // Funcoes relacionadas ao Pedido
 Pedido* criaPedido(int codigo, int codigo_cliente, int codigo_produto, int quantidade, double total);
@@ -53,6 +55,7 @@ Pedido* lePedido(FILE *in);
 void imprimePedido(Pedido *ped);
 void removePedido(int codigo, FILE *arquivo);
 void imprimirBasePedido(FILE *out);
+int tamanhoArquivoPedidos(FILE *arq);
 
 // Funcoes auxiliares
 int tamanhoRegistroProduto();
