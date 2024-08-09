@@ -32,30 +32,38 @@ typedef struct {
 
 // Funcoes relacionadas ao Produto
 Produto* criaProduto(int codigo, char *nome, double preco, int quantidade);
+int codigoExisteProd(int codigo, FILE* arq_prod);
 void salvaProduto(Produto *prod, FILE *out);
 Produto* leProduto(FILE *in);
 void imprimeProduto(Produto *prod);
 void removeProduto(int codigo, FILE *arquivo);
 void imprimirBaseProdutos(FILE *out);
 int tamanhoArquivoProdutos(FILE *arq);
+void criarBaseProdutos(FILE *out, int tam);
 
 // Funcoes relacionadas ao Cliente
 Cliente* criaCliente(int codigo, char *nome, char *cpf, char *endereco);
+int codigoExisteCli(int codigo, FILE* arq_cli);
 void salvaCliente(Cliente *cli, FILE *out);
 Cliente* leCliente(FILE *in);
 void imprimeCliente(Cliente *cli);
 void removeCliente(int codigo, FILE *arquivo);
 void imprimirBaseCliente(FILE *out);
 int tamanhoArquivoClientes(FILE *arq);
+void criarBaseClientes(FILE *out, int tam);
+void gerarCPF(char* cpf);
+void gerarEndereco(char* endereco);
 
 // Funcoes relacionadas ao Pedido
 Pedido* criaPedido(int codigo, int codigo_cliente, int codigo_produto, int quantidade, double total);
+int codigoExistePed(int chave, FILE* arq_ped);
 void salvaPedido(Pedido *ped, FILE *out);
 Pedido* lePedido(FILE *in);
 void imprimePedido(Pedido *ped);
 void removePedido(int codigo, FILE *arquivo);
 void imprimirBasePedido(FILE *out);
 int tamanhoArquivoPedidos(FILE *arq);
+void criarBasePedidos(FILE *out, int tam);
 
 // Funcoes auxiliares
 int tamanhoRegistroProduto();
@@ -63,10 +71,5 @@ int tamanhoRegistroCliente();
 int tamanhoRegistroPedido();
 int qtdRegistros(FILE *arq, int tamanho_registro);
 void embaralha(int *array, int n);
-void criarBaseProdutos(FILE *out, int tam);
-void criarBaseClientes(FILE *out, int tam);
-void criarBasePedidos(FILE *out, int tam);
-int codigoExisteProd(int codigo, FILE* arq_prod);
-int codigoExistePed(int chave, FILE* arq_ped);
-int codigoExisteCli(int codigo, FILE* arq_cli);
+
 #endif // ARTIGOS_ESPORTIVOS_H

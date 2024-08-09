@@ -34,7 +34,7 @@ int main() {
         int codigo; //Utilizada para adicionar produto/cliente
         char nome[100]; double preco; int quantidade; //Utilizadas para adicionar produto
         int chave; //Utilizada para fazer buscas
-        char cpf[14], endereco[100]; //Utilizadas para adicionar cliente
+        char cpf[15], endereco[100]; //Utilizadas para adicionar cliente
         int codigo_cli; int codigo_prod; double total; //Utilizadas para adicionar pedido
 
         int opcao; //Utilizada para controlar switch case interno de cada menu
