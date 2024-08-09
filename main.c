@@ -339,6 +339,7 @@ int main() {
                     selectionSortClientes(arq_cli, tamanhoArquivoClientes(arq_cli));
                     cliente_atual = buscaBinariaCliente(codigo_cli, arq_cli, tamanhoArquivoClientes(arq_cli));
                     imprimeCliente(cliente_atual);
+                    free(cliente_atual);
                 }else{
                     printf("\nErro: O codigo nao esta vinculado a nenhum cliente!\n\n");
                     break;
@@ -352,20 +353,24 @@ int main() {
                     selectionSortProdutos(arq_prod, tamanhoArquivoProdutos(arq_prod));
                     prod_comprado = buscaBinariaProduto(codigo_prod, arq_prod, tamanhoArquivoProdutos(arq_prod));
                     imprimeProduto(prod_comprado);
+                    printf("\nInforme a quantidade: ");
+                    scanf("%d", &quantidade);
+                    if (prod_comprado->quantidade >= quantidade) {
+                        total = (prod_comprado->preco * quantidade);
+                        printf("Valor total do pedido: %lf", total);
+                        Pedido *pedido = criaPedido(codigo, codigo_cli, codigo_prod, quantidade, total);
+                        salvaPedido(pedido, arq_ped);
+                        printf("\n\nPedido adicionado com sucesso:\n");
+                        imprimePedido(pedido);
+                        free(pedido);
+                    }else{
+                        printf("\nErro: Quantidade solicitada indisponivel no estoque!\n\n");
+                    }
+                free(prod_comprado);
                 }else{
                     printf("\nErro: O codigo nao esta vinculado a nenhum produto!\n\n");
                     break;
                 }
-                printf("\nInforme a quantidade: ");
-                scanf("%d", &quantidade);                      
-                total = (prod_comprado->preco * quantidade);
-                printf("Valor total do pedido: %lf", total);
-                free(prod_comprado);
-                free(cliente_atual);
-                Pedido* pedido = criaPedido(codigo, codigo_cli, codigo_prod, quantidade, total);
-                salvaPedido(pedido, arq_ped);
-                printf("\n\nPedido adicionado com sucesso:\n");
-                imprimePedido(pedido);
                 break;
 
             case 7:
