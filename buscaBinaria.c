@@ -5,7 +5,7 @@
 
 Produto* buscaBinariaProduto(int chave, FILE *in, int tam) {
     int achou = 0;
-    int comparacoes = 0; // Inicializa o contador de comparações
+    int comparacoes = 0; 
     int esq = 0;
     int dir = tam - 1;
     Produto *f = NULL;
@@ -13,15 +13,13 @@ Produto* buscaBinariaProduto(int chave, FILE *in, int tam) {
     while (esq <= dir) {
         int meio = (esq + dir) / 2;
 
-        // Move o ponteiro do arquivo para o meio
-        fseek(in, meio * tamanhoRegistroProduto(), SEEK_SET);
+        fseek(in, meio * tamanhoRegistroProduto(), SEEK_SET); // Move o ponteiro do arquivo para o meio
         f = leProduto(in);
-
-        comparacoes++; // Conta a comparação realizada
+        comparacoes++; 
 
         if (f->codigo == chave) {
             achou = 1;
-            printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
+            printf("Numero de comparacoes: %d\n", comparacoes); 
             return f;
         } else if (f->codigo < chave) {
             esq = meio + 1;
@@ -32,34 +30,33 @@ Produto* buscaBinariaProduto(int chave, FILE *in, int tam) {
         free(f); // Libera o registro lido
     } 
      if(achou == 0){
-         printf("Produto com codigo %d nao encontrado.\n", chave);
-        printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+        printf("Produto com codigo %d nao encontrado.\n", chave);
+        printf("Numero de comparacoes: %d\n", comparacoes); 
         return NULL; // Retorna NULL se não encontrar
     
      }
 
-    printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+    printf("Numero de comparacoes: %d\n", comparacoes); 
     return NULL; // Retorna NULL se não encontrar
 }
 
 Cliente* buscaBinariaCliente(int chave, FILE *in, int tam) {
     int achou = 0;
-    int comparacoes = 0; // Inicializa o contador de comparações
+    int comparacoes = 0; 
     int esq = 0;
     int dir = tam - 1;
     Cliente *f = NULL;
     
     while (esq <= dir) {
         int meio = (esq + dir) / 2;
-        // Move o ponteiro do arquivo para o meio
-        fseek(in, meio * tamanhoRegistroCliente(), SEEK_SET);
+        
+        fseek(in, meio * tamanhoRegistroCliente(), SEEK_SET); // Move o ponteiro do arquivo para o meio
         f = leCliente(in);
-
-        comparacoes++; // Conta a comparação realizada
+        comparacoes++;
 
         if (f->codigo == chave) {
             achou = 1;
-            printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
+            printf("Numero de comparacoes: %d\n", comparacoes); 
             return f;
         } else if (f->codigo < chave) {
             esq = meio + 1;
@@ -71,7 +68,7 @@ Cliente* buscaBinariaCliente(int chave, FILE *in, int tam) {
     }
     if(achou == 0){
         printf("Produto com codigo %d nao encontrado.\n", chave);
-        printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+        printf("Numero de comparacoes: %d\n", comparacoes); 
         return NULL; // Retorna NULL se não encontrar
     
      }
@@ -82,22 +79,21 @@ Cliente* buscaBinariaCliente(int chave, FILE *in, int tam) {
 
 Pedido* buscaBinariaPedido(int chave, FILE *in, int tam) {
     int achou = 0;
-    int comparacoes = 0; // Inicializa o contador de comparações
+    int comparacoes = 0; 
     int esq = 0;
     int dir = tam - 1;
     Pedido *f = NULL;
     
     while (esq <= dir) {
         int meio = (esq + dir) / 2;
-        // Move o ponteiro do arquivo para o meio
-        fseek(in, meio * tamanhoRegistroPedido(), SEEK_SET);
+        
+        fseek(in, meio * tamanhoRegistroPedido(), SEEK_SET); // Move o ponteiro do arquivo para o meio
         f = lePedido(in);
-
-        comparacoes++; // Conta a comparação realizada
+        comparacoes++; 
 
         if (f->codigo == chave) {
             achou = 1;
-            printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
+            printf("Numero de comparacoes: %d\n", comparacoes);
             return f;
         } else if (f->codigo < chave) {
             esq = meio + 1;
@@ -109,7 +105,7 @@ Pedido* buscaBinariaPedido(int chave, FILE *in, int tam) {
     }
     if(achou == 0){
         printf("Produto com codigo %d nao encontrado.\n", chave);
-        printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+        printf("Numero de comparacoes: %d\n", comparacoes); 
         return NULL; // Retorna NULL se não encontrar
     }
 

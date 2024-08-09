@@ -4,7 +4,6 @@
 #include <time.h>     //tempo: time, clock, difftime e geração de números aleatórios, como srand e rand.
 #include <math.h>     //funções matemáticas, como sqrt, pow, sin, cos e log.
 
-
 // Funcoes relacionadas ao Produto
 Produto* criaProduto(int codigo, char *nome, double preco, int quantidade) {
     Produto *prod = (Produto *) malloc(sizeof(Produto)); // Aloca memória para um novo Produto

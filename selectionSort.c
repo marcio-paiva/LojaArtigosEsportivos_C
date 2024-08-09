@@ -8,63 +8,41 @@ void selectionSortProdutos(FILE *arq, int tam) {
     Produto *fi, *fj, *fmin;
 
     for (i = 0; i < tam - 1; i++) {
-        min_idx = i;
+        min_idx = i; // Assume o índice atual como o menor
 
-        // Lê o registro no índice i e assume que é o menor
-        fseek(arq, i * tamanhoRegistroProduto(), SEEK_SET);
-        fmin = leProduto(arq);
-
-        if (fmin == NULL) {
-            perror("Erro ao ler o registro no índice i");
-            return;
-        }
+        fseek(arq, i * tamanhoRegistroProduto(), SEEK_SET); // Posiciona o ponteiro no início do índice i
+        fmin = leProduto(arq); // Lê o produto no índice i
 
         for (j = i + 1; j < tam; j++) {
-            fseek(arq, j * tamanhoRegistroProduto(), SEEK_SET);
-            fj = leProduto(arq);
+            fseek(arq, j * tamanhoRegistroProduto(), SEEK_SET); // Posiciona o ponteiro no índice j
+            fj = leProduto(arq); // Lê o produto no índice j
 
-            if (fj == NULL) {
-                perror("Erro ao ler o registro no índice j");
-                free(fmin);
-                return;
-            }
-
-            if (fj->codigo < fmin->codigo) {
-                min_idx = j;
-                free(fmin);
-                fmin = fj;
+            if (fj->codigo < fmin->codigo) { // Verifica se o produto no índice j é menor
+                min_idx = j; // Atualiza o índice do menor produto
+                free(fmin); // Libera o produto anterior
+                fmin = fj; // Atualiza o menor produto
             } else {
-                free(fj);
+                free(fj); // Libera o produto que não é menor
             }
         }
 
-        // Se min_idx não for o índice atual, trocamos os registros
         if (min_idx != i) {
-            fseek(arq, i * tamanhoRegistroProduto(), SEEK_SET);
-            fi = leProduto(arq);
+            fseek(arq, i * tamanhoRegistroProduto(), SEEK_SET); // Posiciona o ponteiro no início do índice i
+            fi = leProduto(arq); // Lê o produto no índice i para troca
 
-            if (fi == NULL) {
-                perror("Erro ao ler o registro no índice i para troca");
-                free(fmin);
-                return;
-            }
+            fseek(arq, i * tamanhoRegistroProduto(), SEEK_SET); // Posiciona o ponteiro no índice i
+            salvaProduto(fmin, arq); // Salva o menor produto na posição i
 
-            // Salva o menor valor na posição i
-            fseek(arq, i * tamanhoRegistroProduto(), SEEK_SET);
-            salvaProduto(fmin, arq);
+            fseek(arq, min_idx * tamanhoRegistroProduto(), SEEK_SET); // Posiciona o ponteiro no índice min_idx
+            salvaProduto(fi, arq); // Salva o produto original na posição min_idx
 
-            // Salva o valor original na posição min_idx
-            fseek(arq, min_idx * tamanhoRegistroProduto(), SEEK_SET);
-            salvaProduto(fi, arq);
-
-            free(fi);
+            free(fi); // Libera o produto que foi substituído
         }
 
-        free(fmin);
+        free(fmin); // Libera o menor produto
     }
 
-    // Descarrega o buffer para ter certeza que dados foram gravados
-    fflush(arq);
+    fflush(arq); // Descarrega o buffer para garantir que os dados foram gravados
 }
 
 void selectionSortClientes(FILE *arq, int tam) {
@@ -72,62 +50,41 @@ void selectionSortClientes(FILE *arq, int tam) {
     Cliente *fi, *fj, *fmin;
 
     for (i = 0; i < tam - 1; i++) {
-        min_idx = i;
+        min_idx = i; // Assume o índice atual como o menor
 
-        // Lê o registro no índice i e assume que é o menor
-        fseek(arq, i * tamanhoRegistroCliente(), SEEK_SET);
-        fmin = leCliente(arq);
-
-        if (fmin == NULL) {
-            perror("Erro ao ler o registro no índice i");
-            return;
-        }
+        fseek(arq, i * tamanhoRegistroCliente(), SEEK_SET); // Posiciona o ponteiro no início do índice i
+        fmin = leCliente(arq); // Lê o cliente no índice i
 
         for (j = i + 1; j < tam; j++) {
-            fseek(arq, j * tamanhoRegistroCliente(), SEEK_SET);
-            fj = leCliente(arq);
+            fseek(arq, j * tamanhoRegistroCliente(), SEEK_SET); // Posiciona o ponteiro no índice j
+            fj = leCliente(arq); // Lê o cliente no índice j
 
-            if (fj == NULL) {
-                perror("Erro ao ler o registro no índice j");
-                free(fmin);
-                return;
-            }
-
-            if (fj->codigo < fmin->codigo) {
-                min_idx = j;
-                free(fmin);
-                fmin = fj;
+            if (fj->codigo < fmin->codigo) { // Verifica se o cliente no índice j é menor
+                min_idx = j; // Atualiza o índice do menor cliente
+                free(fmin); // Libera o cliente anterior
+                fmin = fj; // Atualiza o menor cliente
             } else {
-                free(fj);
+                free(fj); // Libera o cliente que não é menor
             }
         }
 
-        // Se min_idx não for o índice atual, trocamos os registros
         if (min_idx != i) {
-            fseek(arq, i * tamanhoRegistroCliente(), SEEK_SET);
-            fi = leCliente(arq);
+            fseek(arq, i * tamanhoRegistroCliente(), SEEK_SET); // Posiciona o ponteiro no início do índice i
+            fi = leCliente(arq); // Lê o cliente no índice i para troca
 
-            if (fi == NULL) {
-                perror("Erro ao ler o registro no índice i para troca");
-                free(fmin);
-                return;
-            }
+            fseek(arq, i * tamanhoRegistroCliente(), SEEK_SET); // Posiciona o ponteiro no índice i
+            salvaCliente(fmin, arq); // Salva o menor cliente na posição i
 
-            // Salva o menor valor na posição i
-            fseek(arq, i * tamanhoRegistroCliente(), SEEK_SET);
-            salvaCliente(fmin, arq);
+            fseek(arq, min_idx * tamanhoRegistroCliente(), SEEK_SET); // Posiciona o ponteiro no índice min_idx
+            salvaCliente(fi, arq); // Salva o cliente original na posição min_idx
 
-            // Salva o valor original na posição min_idx
-            fseek(arq, min_idx * tamanhoRegistroCliente(), SEEK_SET);
-            salvaCliente(fi, arq);
-
-            free(fi);
+            free(fi); // Libera o cliente que foi substituído
         }
 
-        free(fmin);
+        free(fmin); // Libera o menor cliente
     }
-    // Descarrega o buffer para ter certeza que dados foram gravados
-    fflush(arq);
+
+    fflush(arq); // Descarrega o buffer para garantir que os dados foram gravados
 }
 
 void selectionSortPedidos(FILE *arq, int tam) {
@@ -135,58 +92,39 @@ void selectionSortPedidos(FILE *arq, int tam) {
     Pedido *fi, *fj, *fmin;
 
     for (i = 0; i < tam - 1; i++) {
-        min_idx = i;
+        min_idx = i; // Assume o índice atual como o menor
 
-        // Lê o registro no índice i e assume que é o menor
-        fseek(arq, i * tamanhoRegistroPedido(), SEEK_SET);
-        fmin = lePedido(arq);
-
-        if (fmin == NULL) {
-            perror("Erro ao ler o registro no índice i");
-            return;
-        }
+        fseek(arq, i * tamanhoRegistroPedido(), SEEK_SET); // Posiciona o ponteiro no início do índice i
+        fmin = lePedido(arq); // Lê o pedido no índice i
 
         for (j = i + 1; j < tam; j++) {
-            fseek(arq, j * tamanhoRegistroPedido(), SEEK_SET);
-            fj = lePedido(arq);
+            fseek(arq, j * tamanhoRegistroPedido(), SEEK_SET); // Posiciona o ponteiro no índice j
+            fj = lePedido(arq); // Lê o pedido no índice j
 
-            if (fj == NULL) {
-                perror("Erro ao ler o registro no índice j");
-                free(fmin);
-                return;
-            }
-
-            if (fj->codigo < fmin->codigo) {
-                min_idx = j;
-                free(fmin);
-                fmin = fj;
+            if (fj->codigo < fmin->codigo) { // Verifica se o pedido no índice j é menor
+                min_idx = j; // Atualiza o índice do menor pedido
+                free(fmin); // Libera o pedido anterior
+                fmin = fj; // Atualiza o menor pedido
             } else {
-                free(fj);
+                free(fj); // Libera o pedido que não é menor
             }
         }
 
-        // Se min_idx não for o índice atual, trocamos os registros
         if (min_idx != i) {
-            fseek(arq, i * tamanhoRegistroPedido(), SEEK_SET);
-            fi = lePedido(arq);
+            fseek(arq, i * tamanhoRegistroPedido(), SEEK_SET); // Posiciona o ponteiro no início do índice i
+            fi = lePedido(arq); // Lê o pedido no índice i para troca
 
-            if (fi == NULL) {
-                perror("Erro ao ler o registro no índice i para troca");
-                free(fmin);
-                return;
-            }
+            fseek(arq, i * tamanhoRegistroPedido(), SEEK_SET); // Posiciona o ponteiro no índice i
+            salvaPedido(fmin, arq); // Salva o menor pedido na posição i
 
-            fseek(arq, i * tamanhoRegistroPedido(), SEEK_SET);
-            salvaPedido(fmin, arq);
+            fseek(arq, min_idx * tamanhoRegistroPedido(), SEEK_SET); // Posiciona o ponteiro no índice min_idx
+            salvaPedido(fi, arq); // Salva o pedido original na posição min_idx
 
-            fseek(arq, min_idx * tamanhoRegistroPedido(), SEEK_SET);
-            salvaPedido(fi, arq);
-
-            free(fi);
+            free(fi); // Libera o pedido que foi substituído
         }
 
-        free(fmin);
+        free(fmin); // Libera o menor pedido
     }
-    // Descarrega o buffer para ter certeza que dados foram gravados
-    fflush(arq);
+
+    fflush(arq); // Descarrega o buffer para garantir que os dados foram gravados
 }
