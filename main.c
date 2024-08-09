@@ -1,17 +1,17 @@
-#include "loja.h"
 #include <stdio.h>
+#include <stdlib.h>   //alocação de memória, controle de processos e conversões de tipos, como malloc, free, exit e atoi.
+#include <string.h>   //manipulação de strings, como strcpy, strlen, strcat e strcmp.
+#include <time.h>     //tempo: time, clock, difftime e geração de números aleatórios, como srand e rand.
 #include "selectionsort.h"
 #include "buscaBinaria.h"
 #include "buscaSequencial.h"
-#include <stdlib.h>
-#include <time.h>
-#include <string.h>
+#include "loja.h"
 #define TAM_PRODUTOS 1000 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 #define TAM_CLIENTES 1000 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 #define TAM_PEDIDOS 10 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 
 int main() {
-    FILE *arq_prod = fopen("produtos.dat", "wb+");
+    FILE *arq_prod = fopen("produtos.dat", "wb+"); // Abre o arquivo para leitura e escrita em modo binário
     FILE *arq_cli = fopen("clientes.dat", "wb+");
     FILE *arq_ped = fopen("pedidos.dat", "wb+");
 
@@ -76,14 +76,14 @@ int main() {
                         //BUSCA SEQUENCIAL NA BASE DE PRODUTOS
                         printf("\n\nDigite o codigo do produto para buscar: ");
                         scanf("%d", &chave);
-                        start_time = clock();
+                        start_time = clock(); // Registra o tempo atual (início da medição) usando o relógio do processador
                         Produto *resultado_prod = buscaSequencialProduto(chave, arq_prod);
-                        end_time = clock();
-                        time = (end_time - start_time) / 1000.0;
+                        end_time = clock(); // Registra o tempo atual (fim da medição)
+                        time = (end_time - start_time) / 1000.0; // Calcula o tempo em segundos dividindo por 1000.0 (a unidade de tempo é em milissegundos)
                         if (resultado_prod != NULL) {
                             imprimeProduto(resultado_prod);
                             printf("\nTempo de execucao da busca sequencial dos produtos: %.6f segundos\n", time);
-                            free(resultado_prod);
+                            free(resultado_prod); 
                         }
                         break;
 

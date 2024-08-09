@@ -1,30 +1,31 @@
 #include "loja.h"
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <math.h>
+#include <stdlib.h>   //alocação de memória, controle de processos e conversões de tipos, como malloc, free, exit e atoi.
+#include <string.h>   //manipulação de strings, como strcpy, strlen, strcat e strcmp.
+#include <time.h>     //tempo: time, clock, difftime e geração de números aleatórios, como srand e rand.
+#include <math.h>     //funções matemáticas, como sqrt, pow, sin, cos e log.
+
 
 // Funcoes relacionadas ao Produto
 Produto* criaProduto(int codigo, char *nome, double preco, int quantidade) {
-    Produto *prod = (Produto *) malloc(sizeof(Produto));
-    if (prod) {
-        prod->codigo = codigo;
-        strcpy(prod->nome, nome);
-        prod->preco = preco;
-        prod->quantidade = quantidade;
+    Produto *prod = (Produto *) malloc(sizeof(Produto)); // Aloca memória para um novo Produto
+    if (prod) { // Verifica se a alocação foi bem-sucedida
+        prod->codigo = codigo; 
+        strcpy(prod->nome, nome); 
+        prod->preco = preco; 
+        prod->quantidade = quantidade; 
     }
-    return prod;
+    return prod; // Retorna o ponteiro para o novo produto
 }
 
 int codigoExisteProd(int codigo, FILE* arq_prod) {
     rewind(arq_prod); // Volta ao início do arquivo
     Produto* prod;
-    while ((prod = leProduto(arq_prod)) != NULL) {
-        if (prod->codigo == codigo) {
-            free(prod);
+    while ((prod = leProduto(arq_prod)) != NULL) { // Lê produtos do arquivo até o final
+        if (prod->codigo == codigo) { // Verifica se o código do produto corresponde ao código buscado
+            free(prod); // Libera a memória do produto
             return 1; // Código já existe
         }
-        free(prod);
+        free(prod); // Libera a memória do produto
     }
     return 0; // Código não existe
 }
@@ -37,15 +38,15 @@ void salvaProduto(Produto *prod, FILE *out) {
 }
 
 Produto* leProduto(FILE *in) {
-    Produto *prod = (Produto *) malloc(sizeof(Produto));
-    if (0 >= fread(&prod->codigo, sizeof(int), 1, in)) {
-        free(prod);
-        return NULL;
+    Produto *prod = (Produto *) malloc(sizeof(Produto)); // Aloca memória para um novo Produto
+    if (0 >= fread(&prod->codigo, sizeof(int), 1, in)) { // Lê o código do produto e verifica se a leitura foi bem-sucedida
+        free(prod); // Libera a memória alocada se a leitura falhar
+        return NULL; // Retorna NULL se não for possível ler o produto
     }
-    fread(prod->nome, sizeof(char), sizeof(prod->nome), in);
-    fread(&prod->preco, sizeof(double), 1, in);
-    fread(&prod->quantidade, sizeof(int), 1, in);
-    return prod;
+    fread(prod->nome, sizeof(char), sizeof(prod->nome), in); 
+    fread(&prod->preco, sizeof(double), 1, in); 
+    fread(&prod->quantidade, sizeof(int), 1, in); 
+    return prod; // Retorna o ponteiro para o produto lido
 }
 
 void imprimeProduto(Produto *prod) {
@@ -58,7 +59,7 @@ void imprimeProduto(Produto *prod) {
 }
 
 void removeProduto(int codigo, FILE *arquivo) {
-    FILE *temp = fopen("temp.dat", "wb");
+    FILE *temp = fopen("temp.dat", "wb"); // Abre um arquivo temporário para escrita binária
     if (!temp) {
         perror("Nao foi possivel abrir o arquivo temporario para escrita");
         return;
@@ -66,41 +67,41 @@ void removeProduto(int codigo, FILE *arquivo) {
 
     Produto *prod;
     int found = 0;
+    fseek(arquivo, 0, SEEK_SET); // Posiciona o ponteiro do arquivo original no início
 
-    fseek(arquivo, 0, SEEK_SET); // Posiciona o ponteiro no início do arquivo
-
-    while ((prod = leProduto(arquivo)) != NULL) {
-        if (prod->codigo == codigo) {
-            found = 1;
-            free(prod);
+    while ((prod = leProduto(arquivo)) != NULL) { // Lê produtos do arquivo original até o final
+        if (prod->codigo == codigo) { // Verifica se o código do produto corresponde ao código a ser removido
+            found = 1;  // Marca que o produto foi encontrado
+            free(prod); // Libera a memória alocada para o produto
         } else {
-            salvaProduto(prod, temp);
-            free(prod);
+            salvaProduto(prod, temp); // Salva o produto não removido no arquivo temporário
+            free(prod); // Libera a memória alocada para o produto
         }
     }
 
-    fclose(temp);
+    fclose(temp); // Fecha o arquivo temporário após a escrita
 
     if (found) {
-        fclose(arquivo);
-        remove("produtos.dat");          // Remove o arquivo original
-        rename("temp.dat", "produtos.dat"); // Renomeia o arquivo temporário
+        fclose(arquivo); // Fecha o arquivo original após a leitura
+        remove("produtos.dat"); // Remove o arquivo original
+        rename("temp.dat", "produtos.dat"); // Renomeia o arquivo temporário para o nome do arquivo original
         printf("\nProduto com codigo %d removido com sucesso.\n", codigo);
     } else {
-        remove("temp.dat");              // Remove o arquivo temporário
+        remove("temp.dat"); // Remove o arquivo temporário se o produto não foi encontrado
         printf("\nProduto com codigo %d nao encontrado.\n", codigo);
     }
-     arquivo = fopen("produtos.dat", "rb");
-        if (!arquivo) {
-            perror("Nao foi possivel reabrir o arquivo produtos.dat");
-            return;
-        }   
+
+    arquivo = fopen("produtos.dat", "rb"); // Reabre o arquivo original para leitura binária
+    if (!arquivo) {
+        perror("Nao foi possivel reabrir o arquivo produtos.dat");
+        return;
+    }   
 }
 
 void imprimirBaseProdutos(FILE *out) {
     printf("\nImprimindo a base de dados...\n");
 
-    rewind(out);
+    rewind(out); //Início do arquivo
     void *item;
 
     while ((item = leProduto(out)) != NULL) {
@@ -110,8 +111,8 @@ void imprimirBaseProdutos(FILE *out) {
 }
 
 int tamanhoArquivoProdutos(FILE *arq) {
-    fseek(arq, 0, SEEK_END);
-    int tam = trunc(ftell(arq) / tamanhoRegistroProduto());
+    fseek(arq, 0, SEEK_END); // Move o ponteiro do arquivo para o final
+    int tam = trunc(ftell(arq) / tamanhoRegistroProduto()); // Calcula o número de registros no arquivo, convertendo o resultado para inteiro
     return tam;
 }
 
@@ -120,10 +121,7 @@ void criarBaseProdutos(FILE *out, int tam) {
     for (int i = 0; i < tam; i++) {
         ids[i] = i + 1;
     }
-
-    // Embaralha os IDs para criar produtos em ordem aleatória
-    embaralha(ids, tam);
-
+    embaralha(ids, tam); // Embaralha os IDs para criar produtos em ordem aleatória
     Produto *p;
     for (int i = 0; i < tam; i++) {
         p = criaProduto(ids[i], "Produto", 10.0 * (ids[i]), tam - i);
@@ -135,14 +133,14 @@ void criarBaseProdutos(FILE *out, int tam) {
 
 // Funcoes relacionadas ao Cliente
 Cliente* criaCliente(int codigo, char *nome, char *cpf, char *endereco) {
-    Cliente *cli = (Cliente *) malloc(sizeof(Cliente));
-    if (cli) {
-        cli->codigo = codigo;
-        strcpy(cli->nome, nome);
-        strcpy(cli->cpf, cpf);
-        strcpy(cli->endereco, endereco);
+    Cliente *cli = (Cliente *) malloc(sizeof(Cliente)); // Aloca memória para um novo Cliente
+    if (cli) { // Verifica se a alocação foi bem-sucedida
+        cli->codigo = codigo; 
+        strcpy(cli->nome, nome); 
+        strcpy(cli->cpf, cpf); 
+        strcpy(cli->endereco, endereco); 
     }
-    return cli;
+    return cli; // Retorna o ponteiro para o novo cliente
 }
 
 int codigoExisteCli(int codigo, FILE* arq_cli) {
@@ -166,15 +164,15 @@ void salvaCliente(Cliente *cli, FILE *out) {
 }
 
 Cliente* leCliente(FILE *in) {
-    Cliente *cli = (Cliente *) malloc(sizeof(Cliente));
-    if (0 >= fread(&cli->codigo, sizeof(int), 1, in)) {
-        free(cli);
-        return NULL;
+    Cliente *cli = (Cliente *) malloc(sizeof(Cliente)); // Aloca memória para um novo Cliente
+    if (0 >= fread(&cli->codigo, sizeof(int), 1, in)) { // Lê o código do cliente e verifica se a leitura foi bem-sucedida
+        free(cli); // Libera a memória alocada se a leitura falhar
+        return NULL; // Retorna NULL se não for possível ler o cliente
     }
-    fread(cli->nome, sizeof(char), sizeof(cli->nome), in);
-    fread(cli->cpf, sizeof(char), sizeof(cli->cpf), in);
-    fread(cli->endereco, sizeof(char), sizeof(cli->endereco), in);
-    return cli;
+    fread(cli->nome, sizeof(char), sizeof(cli->nome), in); 
+    fread(cli->cpf, sizeof(char), sizeof(cli->cpf), in); 
+    fread(cli->endereco, sizeof(char), sizeof(cli->endereco), in); 
+    return cli; // Retorna o ponteiro para o cliente lido
 }
 
 void imprimeCliente(Cliente *cli) {
@@ -187,49 +185,48 @@ void imprimeCliente(Cliente *cli) {
 }
 
 void removeCliente(int codigo, FILE *arquivo) {
-    FILE *temp = fopen("temp.dat", "wb");
-    if (!temp) {
-        perror("Nao foi possivel abrir o arquivo temporario para escrita");
-        return;
+    FILE *temp = fopen("temp.dat", "wb"); // Abre um arquivo temporário para escrita binária
+    if (!temp) { // Verifica se o arquivo temporário foi aberto com sucesso
+        perror("Nao foi possivel abrir o arquivo temporario para escrita"); 
+        return; 
     }
 
     Cliente *cli;
     int found = 0;
-
     fseek(arquivo, 0, SEEK_SET); // Posiciona o ponteiro no início do arquivo
 
-    while ((cli = leCliente(arquivo)) != NULL) {
-        if (cli->codigo == codigo) {
-            found = 1;
-            free(cli);
+    while ((cli = leCliente(arquivo)) != NULL) { // Lê clientes do arquivo até o final
+        if (cli->codigo == codigo) { // Verifica se o código do cliente corresponde ao código a ser removido
+            found = 1; // Marca que o cliente foi encontrado
+            free(cli); // Libera a memória do cliente
         } else {
-            salvaCliente(cli, temp);
-            free(cli);
+            salvaCliente(cli, temp); // Salva o cliente não removido no arquivo temporário
+            free(cli); // Libera a memória do cliente
         }
     }
 
-    fclose(temp);
+    fclose(temp); // Fecha o arquivo temporário após a escrita
 
-    if (found) {
-        fclose(arquivo);
-        remove("clientes.dat");          // Remove o arquivo original
-        rename("temp.dat", "clientes.dat"); // Renomeia o arquivo temporário
-        printf("Cliente com codigo %d removido com sucesso.\n", codigo);
+    if (found) { 
+        fclose(arquivo); // Fecha o arquivo original
+        remove("clientes.dat"); // Remove o arquivo original
+        rename("temp.dat", "clientes.dat"); // Renomeia o arquivo temporário para o nome do arquivo original
+        printf("Cliente com codigo %d removido com sucesso.\n", codigo); 
     } else {
-        remove("temp.dat");              // Remove o arquivo temporário
-        printf("Cliente com codigo %d não encontrado.\n", codigo);
+        remove("temp.dat"); // Remove o arquivo temporário se o cliente não foi encontrado
+        printf("Cliente com codigo %d não encontrado.\n", codigo); 
     }
-    arquivo = fopen("clientes.dat", "rb");
-    if (!arquivo) {
-        perror("Nao foi possivel reabrir o arquivo clientes.dat");
-        return;
+    arquivo = fopen("clientes.dat", "rb"); // Reabre o arquivo original para leitura binária
+    if (!arquivo) { // Verifica se o arquivo foi reaberto com sucesso
+        perror("Nao foi possivel reabrir o arquivo clientes.dat"); 
+        return; 
     }   
 }
 
 void imprimirBaseCliente(FILE *out){
         printf("\nImprimindo a base de dados...\n");
 
-    rewind(out);
+    rewind(out); //Início do arquivo
     void *item;
 
     while ((item = leCliente(out)) != NULL) {
@@ -239,8 +236,8 @@ void imprimirBaseCliente(FILE *out){
 }
 
 int tamanhoArquivoClientes(FILE *arq) {
-    fseek(arq, 0, SEEK_END);
-    int tam = trunc(ftell(arq) / tamanhoRegistroCliente());
+    fseek(arq, 0, SEEK_END); // Move o ponteiro do arquivo para o final
+    int tam = trunc(ftell(arq) / tamanhoRegistroCliente()); // Calcula o número de registros no arquivo, convertendo o resultado para inteiro
     return tam;
 }
 
@@ -250,8 +247,7 @@ void criarBaseClientes(FILE *out, int tam) {
         ids[i] = i + 1;
     }
 
-    // Embaralha os IDs para criar clientes em ordem aleatória
-    embaralha(ids, tam);
+    embaralha(ids, tam); // Embaralha os IDs para criar clientes em ordem aleatória
     char cpf[15];
     char endereco[100];
     Cliente *c;
@@ -269,7 +265,7 @@ void gerarCPF(char* cpf) {
     int n2 = rand() % 1000;
     int n3 = rand() % 1000;
     int n4 = rand() % 100;
-    snprintf(cpf, 15, "%03d.%03d.%03d-%02d", n1, n2, n3, n4);
+    snprintf(cpf, 15, "%03d.%03d.%03d-%02d", n1, n2, n3, n4); // Formata e armazena o CPF gerado na string `cpf`
 }
 
 void gerarEndereco(char* endereco) {
@@ -277,15 +273,13 @@ void gerarEndereco(char* endereco) {
     const char* bairros[] = {"Centro", "Jardins", "Bela Vista", "Morumbi", "Vila Madalena"};
     const char* cidades[] = {"São Paulo", "Rio de Janeiro", "Belo Horizonte", "Curitiba", "Porto Alegre"};
     
-    // Gerando um número de casa aleatório
-    int numero = rand() % 1000 + 1; // Gera um número de 1 a 1000
+    int numero = rand() % 1000 + 1; // // Gerando um número de casa aleatório, gera um número de 1 a 1000
     // Selecionando uma rua, bairro e cidade aleatórios
     const char* rua = ruas[rand() % (sizeof(ruas) / sizeof(ruas[0]))];
     const char* bairro = bairros[rand() % (sizeof(bairros) / sizeof(bairros[0]))];
     const char* cidade = cidades[rand() % (sizeof(cidades) / sizeof(cidades[0]))];
 
-    // Formatando o endereço
-    snprintf(endereco, 100, "%s, Numero %d, Bairro %s, %s", rua, numero, bairro, cidade);
+    snprintf(endereco, 100, "%s, Numero %d, Bairro %s, %s", rua, numero, bairro, cidade); // Formatando o endereço
 }
 
 // Funcoes relacionadas ao Pedido
@@ -323,16 +317,16 @@ void salvaPedido(Pedido *ped, FILE *out) {
 }
 
 Pedido* lePedido(FILE *in) {
-    Pedido *ped = (Pedido *) malloc(sizeof(Pedido));
-    if (0 >= fread(&ped->codigo, sizeof(int), 1, in)) {
-        free(ped);
-        return NULL;
+    Pedido *ped = (Pedido *) malloc(sizeof(Pedido)); // Aloca memória para um novo Pedido
+    if (0 >= fread(&ped->codigo, sizeof(int), 1, in)) { // Lê o código do pedido e verifica se a leitura foi bem-sucedida
+        free(ped); // Libera a memória alocada se a leitura falhar
+        return NULL; // Retorna NULL se não for possível ler o pedido
     }
-    fread(&ped->codigo_cliente, sizeof(int), 1, in);
-    fread(&ped->codigo_produto, sizeof(int), 1, in);
-    fread(&ped->quantidade, sizeof(int), 1, in);
-    fread(&ped->total, sizeof(double), 1, in);
-    return ped;
+    fread(&ped->codigo_cliente, sizeof(int), 1, in); 
+    fread(&ped->codigo_produto, sizeof(int), 1, in); 
+    fread(&ped->quantidade, sizeof(int), 1, in); 
+    fread(&ped->total, sizeof(double), 1, in); 
+    return ped; // Retorna o ponteiro para o pedido lido
 }
 
 void imprimePedido(Pedido *ped) {
@@ -345,51 +339,48 @@ void imprimePedido(Pedido *ped) {
     printf("\n**********************************************");
 }
 
-void removePedido(int codigo, FILE *arquivo){
-    FILE *temp = fopen("temp.dat", "wb");
-    if (!temp) {
+void removePedido(int codigo, FILE *arquivo) {
+    FILE *temp = fopen("temp.dat", "wb"); // Abre um arquivo temporário para escrita binária
+    if (!temp) { // Verifica se o arquivo temporário foi aberto com sucesso
         perror("Nao foi possivel abrir o arquivo temporario para escrita");
-        return;
+        return; 
     }
 
     Pedido *ped;
-    int found = 0;
-
+    int found = 0; 
     fseek(arquivo, 0, SEEK_SET); // Posiciona o ponteiro no início do arquivo
 
-    while ((ped = lePedido(arquivo)) != NULL) {
-        if (ped->codigo == codigo) {
-            found = 1;
-            free(ped);
+    while ((ped = lePedido(arquivo)) != NULL) { // Lê pedidos do arquivo até o final
+        if (ped->codigo == codigo) { // Verifica se o código do pedido corresponde ao código a ser removido
+            found = 1; // Marca que o pedido foi encontrado
+            free(ped); // Libera a memória do pedido
         } else {
-            salvaPedido(ped, temp);
-            free(ped);
+            salvaPedido(ped, temp); // Salva o pedido não removido no arquivo temporário
+            free(ped); // Libera a memória do pedido
         }
     }
-    fclose(temp);
+    fclose(temp); // Fecha o arquivo temporário após a escrita
 
-    if (found) {
-        fclose(arquivo);
-        remove("pedidos.dat");          // Remove o arquivo original
-        rename("temp.dat", "pedidos.dat"); // Renomeia o arquivo temporário
-        printf("Pedido com codigo %d removido com sucesso.\n", codigo);
+    if (found) { 
+        fclose(arquivo); // Fecha o arquivo original
+        remove("pedidos.dat"); // Remove o arquivo original
+        rename("temp.dat", "pedidos.dat"); // Renomeia o arquivo temporário para o nome do arquivo original
+        printf("Pedido com codigo %d removido com sucesso.\n", codigo); 
     } else {
-        remove("temp.dat");              // Remove o arquivo temporário
-        printf("Pedido com codigo %d nao encontrado.\n", codigo);
+        remove("temp.dat"); // Remove o arquivo temporário se o pedido não foi encontrado
+        printf("Pedido com codigo %d nao encontrado.\n", codigo); 
     }
-    arquivo = fopen("pedidos.dat", "rb");
-    if (!arquivo) {
-        perror("Nao foi possivel reabrir o arquivo pedidos.dat");
-        return;
+    arquivo = fopen("pedidos.dat", "rb"); // Reabre o arquivo original para leitura binária
+    if (!arquivo) { // Verifica se o arquivo foi reaberto com sucesso
+        perror("Nao foi possivel reabrir o arquivo pedidos.dat"); 
+        return; 
     } 
 }
 
 void imprimirBasePedido(FILE *out){
     printf("\nImprimindo a base de dados...\n");
-
     rewind(out);
     void *item;
-
     while ((item = lePedido(out)) != NULL) {
         imprimePedido(item);
         free(item);
@@ -397,8 +388,8 @@ void imprimirBasePedido(FILE *out){
 }
 
 int tamanhoArquivoPedidos(FILE *arq) {
-    fseek(arq, 0, SEEK_END);
-    int tam = trunc(ftell(arq) / tamanhoRegistroPedido());
+    fseek(arq, 0, SEEK_END); // Move o ponteiro do arquivo para o final
+    int tam = trunc(ftell(arq) / tamanhoRegistroPedido()); // Calcula o número de registros no arquivo, convertendo o resultado para inteiro
     return tam;
 }
 
@@ -408,8 +399,7 @@ void criarBasePedidos(FILE *out, int tam) {
         ids[i] = i + 1;
     }
 
-    // Embaralha os IDs para criar clientes em ordem aleatória
-    embaralha(ids, tam);
+    embaralha(ids, tam); // Embaralha os IDs para criar clientes em ordem aleatória
     Pedido *ped;
     for (int i = 0; i < tam; i++) {
         ped = criaPedido(ids[i], (i % 10) + 1, (i % 10) + 1, 1, 10.0 * (i + 1));
@@ -442,18 +432,18 @@ int tamanhoRegistroPedido() {
 }
 
 int qtdRegistros(FILE *arq, int tamanho_registro) {
-    fseek(arq, 0, SEEK_END);
-    return (int)(ftell(arq) / tamanho_registro);
+    fseek(arq, 0, SEEK_END); // Move o ponteiro do arquivo para o final para obter o tamanho total do arquivo
+    return (int)(ftell(arq) / tamanho_registro); // Calcula o número de registros com base no tamanho do registro e retorna como inteiro
 }
 
 void embaralha(int *array, int n) {
-    if (n > 1) {
-        srand(time(NULL));
-        for (int i = 0; i < n - 1; i++) {
-            int j = i + rand() / (RAND_MAX / (n - i) + 1);
-            int t = array[j];
-            array[j] = array[i];
-            array[i] = t;
+    if (n > 1) { 
+        srand(time(NULL)); // Inicializa o gerador de números aleatórios com a hora atual
+        for (int i = 0; i < n - 1; i++) { 
+            int j = i + rand() / (RAND_MAX / (n - i) + 1); // Calcula um índice aleatório j para trocar
+            int t = array[j]; 
+            array[j] = array[i]; // Substitui o valor no índice j pelo valor no índice i
+            array[i] = t; // Substitui o valor no índice i pelo valor armazenado em t
         }
     }
 }

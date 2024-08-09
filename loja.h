@@ -1,5 +1,3 @@
-// Arquivo: artigos_esportivos.h
-
 #ifndef ARTIGOS_ESPORTIVOS_H
 #define ARTIGOS_ESPORTIVOS_H
 
