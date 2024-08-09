@@ -41,14 +41,14 @@ int main() {
         switch (opcao_geral){
         case 1:
             do {
-                printf("\nMenu de Produtos:\n");
-                printf("1. Gerar Base de Produtos\n");
-                printf("2. Ler Arquivo dos Produtos\n");
-                printf("3. Ordenar Produtos\n");
+                printf("\n=== Menu de Produtos ===\n");
+                printf("1. Gerar Base de Produtos Desordenada\n");
+                printf("2. Imprimir Estoque\n");
+                printf("3. Ordenar Base de Produtos\n");
                 printf("4. Busca Sequencial\n");
                 printf("5. Busca Binaria\n");
-                printf("6. Adicionar Produto\n");
-                printf("7. Remover Produto\n");
+                printf("6. Cadastrar Produto no Estoque\n");
+                printf("7. Remover Produto do Estoque\n");
                 printf("0. Voltar\n");
                 printf("Escolha uma opcao: ");
                 scanf("%d", &opcao);
@@ -82,7 +82,7 @@ int main() {
                         time = (end_time - start_time) / 1000.0;
                         if (resultado_prod != NULL) {
                             imprimeProduto(resultado_prod);
-                                printf("\nTempo de execucao da busca sequencial dos produtos: %.6f segundos\n", time);
+                            printf("\nTempo de execucao da busca sequencial dos produtos: %.6f segundos\n", time);
                             free(resultado_prod);
                         }
                         break;
@@ -104,8 +104,6 @@ int main() {
                             imprimeProduto(resultado_prod);
                             printf("\nTempo de execucao da busca binaria dos produtos: %.6f segundos\n", time);
                             free(resultado_prod);
-                        }else{
-                            printf("\nProduto nao encontrado.\n\n");
                         }
                         break;
 
@@ -150,14 +148,14 @@ int main() {
 
         case 2:
             do {
-                printf("\nMenu de Clientes:\n");
-                printf("1. Gerar Base de Clientes\n");
-                printf("2. Ler Arquivo de Clientes\n");
-                printf("3. Ordenar Clientes\n");
+                printf("\n=== Menu de Clientes ===\n");
+                printf("1. Gerar Base de Clientes Desordenada\n");
+                printf("2. Imprimir Clientes\n");
+                printf("3. Ordenar Base de Clientes\n");
                 printf("4. Busca Sequencial\n");
                 printf("5. Busca Binaria\n");
-                printf("6. Adicionar Clientes\n");
-                printf("7. Remover Clientes\n");
+                printf("6. Cadastrar Cliente\n");
+                printf("7. Remover Cliente\n");
                 printf("0. Voltar\n");
                 printf("Escolha uma opcao: ");
                 scanf("%d", &opcao);
@@ -191,7 +189,7 @@ int main() {
                         time = (end_time - start_time) / 1000.0;
                         if (resultado_cli != NULL) {
                             imprimeCliente(resultado_cli);
-                                printf("\nTempo de execucao da busca sequencial dos clientes: %.6f segundos\n", time);
+                            printf("\nTempo de execucao da busca sequencial dos clientes: %.6f segundos\n", time);
                             free(resultado_cli);
                         }
                         break;
@@ -213,8 +211,6 @@ int main() {
                             imprimeCliente(resultado_cli);
                             printf("\nTempo de execucao da busca binaria dos clientes: %.6f segundos\n", time);
                             free(resultado_cli);
-                        }else{
-                            printf("\nCliente nao encontrado.\n\n");
                         }
                         break;
 
@@ -262,8 +258,8 @@ int main() {
         case 3:
             do {
         printf("\n=== MENU DE PEDIDOS ===\n");
-        printf("1. Criar Base de Pedidos\n");
-        printf("2. Ler Arquivo de Pedidos\n");
+        printf("1. Criar Base de Pedidos Desordenada\n");
+        printf("2. Imprimir Pedidos\n");
         printf("3. Ordenar Base de Pedidos\n");
         printf("4. Busca Sequencial\n");
         printf("5. Busca Binaria\n");
@@ -323,8 +319,6 @@ int main() {
                     imprimePedido(resultado_ped);
                     printf("\nTempo de execucao da busca binaria dos pedidos: %.6f segundos\n", time);
                     free(resultado_ped);
-                }else{
-                    printf("\nPedido nao encontrado.\n\n");
                 }
                 break;
 
@@ -341,7 +335,7 @@ int main() {
                 scanf("%d", &codigo_cli);
                 Cliente* cliente_atual;
                 if(codigoExisteCli(codigo_cli, arq_cli)){
-                    printf("Ordenando base para buscar cliente, ");
+                    printf("\nOrdenando base para buscar cliente, ");
                     selectionSortClientes(arq_cli, tamanhoArquivoClientes(arq_cli));
                     cliente_atual = buscaBinariaCliente(codigo_cli, arq_cli, tamanhoArquivoClientes(arq_cli));
                     imprimeCliente(cliente_atual);
@@ -354,7 +348,7 @@ int main() {
                 scanf("%d", &codigo_prod);
                 Produto* prod_comprado;
                 if(codigoExisteProd(codigo_prod, arq_prod)){
-                    printf("Ordenando base para buscar produto, ");
+                    printf("\nOrdenando base para buscar produto, ");
                     selectionSortProdutos(arq_prod, tamanhoArquivoProdutos(arq_prod));
                     prod_comprado = buscaBinariaProduto(codigo_prod, arq_prod, tamanhoArquivoProdutos(arq_prod));
                     imprimeProduto(prod_comprado);

@@ -21,11 +21,11 @@ Produto* buscaSequencialProduto(int chave, FILE *in) {
     }
 
     if (achou == 1) {
-        printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
+        printf("\nNumero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
         return f;
     } else {
         printf("\nProduto nao encontrado\n\n");
-        printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
+        printf("\nNumero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações se não encontrar
     }
 
     free(f);
@@ -48,11 +48,11 @@ Cliente* buscaSequencialCliente(int chave, FILE *in) {
     }
 
     if (achou == 1) {
-        printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
+        printf("\nNumero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
         return f;
     } else {
         printf("\nCliente nao encontrado\n\n");
-        printf("Numero de comparacoes: %d\n", comparacoes); 
+        printf("\nNumero de comparacoes: %d\n", comparacoes); 
     }
 
     free(f);
@@ -75,11 +75,11 @@ Pedido* buscaSequencialPedido(int chave, FILE *in) {
     }
 
     if (achou == 1) {
-        printf("Numero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
+        printf("\nNumero de comparacoes: %d\n", comparacoes); // Imprime o número de comparações
         return f;
     } else {
         printf("\nPedido nao encontrado\n\n");
-        printf("Numero de comparacoes: %d\n", comparacoes); 
+        printf("\nNumero de comparacoes: %d\n", comparacoes); 
     }
 
     free(f);
