@@ -5,7 +5,9 @@
     "stdio.h": "c",
     "stdlib.h": "c",
     "string.h": "c",
-    "time.h": "c"
+    "time.h": "c",
+    "loja.h": "c",
+    "selecaonatural.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

@@ -5,6 +5,7 @@
 #include "selectionsort.h"
 #include "buscaBinaria.h"
 #include "buscaSequencial.h"
+#include "selecaoNatural.h"
 #include "loja.h"
 #define TAM_PRODUTOS 1000 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 #define TAM_CLIENTES 1000 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
@@ -36,6 +37,7 @@ int main() {
         int chave; //Utilizada para fazer buscas
         char cpf[15], endereco[100]; //Utilizadas para adicionar cliente
         int codigo_cli; int codigo_prod; double total; //Utilizadas para adicionar pedido
+        const char *pasta_particoes = "particoes";
 
         int opcao; //Utilizada para controlar switch case interno de cada menu
         switch (opcao_geral){
@@ -49,6 +51,7 @@ int main() {
                 printf("5. Busca Binaria\n");
                 printf("6. Cadastrar Produto no Estoque\n");
                 printf("7. Remover Produto do Estoque\n");
+                printf("8. Selecao Natural\n");
                 printf("0. Voltar\n");
                 printf("Escolha uma opcao: ");
                 scanf("%d", &opcao);
@@ -133,6 +136,10 @@ int main() {
                         printf("Informe o codigo do produto: ");
                         scanf("%d", &codigo);
                         removeProduto(codigo, arq_prod);
+                        break;
+
+                    case 8:
+                        selecaoNatural(arq_prod, pasta_particoes, 5);
                         break;
 
                     case 0:
