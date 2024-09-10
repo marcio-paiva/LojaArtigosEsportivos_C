@@ -6,8 +6,9 @@
 #include "buscaBinaria.h"
 #include "buscaSequencial.h"
 #include "selecaoNatural.h"
+#include "intercalacao.h"
 #include "loja.h"
-#define TAM_PRODUTOS 1000 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
+#define TAM_PRODUTOS 100 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 #define TAM_CLIENTES 1000 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 #define TAM_PEDIDOS 10 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 
@@ -37,7 +38,7 @@ int main() {
         int chave; //Utilizada para fazer buscas
         char cpf[15], endereco[100]; //Utilizadas para adicionar cliente
         int codigo_cli; int codigo_prod; double total; //Utilizadas para adicionar pedido
-        const char *pasta_particoes = "particoes";
+        int numero_particoes = 0;
 
         int opcao; //Utilizada para controlar switch case interno de cada menu
         switch (opcao_geral){
@@ -52,6 +53,7 @@ int main() {
                 printf("6. Cadastrar Produto no Estoque\n");
                 printf("7. Remover Produto do Estoque\n");
                 printf("8. Selecao Natural\n");
+                printf("9. Intercalacao\n");
                 printf("0. Voltar\n");
                 printf("Escolha uma opcao: ");
                 scanf("%d", &opcao);
@@ -139,7 +141,13 @@ int main() {
                         break;
 
                     case 8:
-                        selecaoNatural(arq_prod, pasta_particoes, 5);
+                        numero_particoes = selecaoNatural(arq_prod, "particoes", 10);
+                        FILE *pat0 = fopen("particoes/particao0.dat", "wb+");
+                        imprimirBaseProdutos(pat0);
+                        break;
+
+                    case 9:
+                        intercalaParticoes("particoes", numero_particoes, arq_prod);
                         break;
 
                     case 0:
@@ -406,6 +414,8 @@ int main() {
             break;
         }
     } while (opcao_geral != 0);
+
+    system("pause");
 
     fclose(arq_prod);
     fclose(arq_cli);

@@ -7,7 +7,8 @@
     "string.h": "c",
     "time.h": "c",
     "loja.h": "c",
-    "selecaonatural.h": "c"
+    "selecaonatural.h": "c",
+    "buscabinaria.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
