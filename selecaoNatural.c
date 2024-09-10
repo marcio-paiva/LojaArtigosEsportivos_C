@@ -3,140 +3,126 @@
 #include <string.h>
 #include "selecaoNatural.h"
 
-// Função para comparar dois produtos (usada para ordenação)
-int compararProdutos(const void *a, const void *b) {
-    Produto *produtoA = (Produto *)a;
-    Produto *produtoB = (Produto *)b;
-    return produtoA->codigo - produtoB->codigo; // Comparar pelo código
+//Função para colocar o produto com menor código na primeira posição (selection sort simplificado - sem laço externo)
+void colocaMenorNaPrimeiraPosicao(Produto **buffer, int tam) {
+    int i, min_idx = 0;
+    Produto *temp;
+
+    // Encontra o menor elemento no array
+    for (i = 1; i < tam; i++) {
+        if (buffer[i]->codigo < buffer[min_idx]->codigo) {
+            min_idx = i; // Atualiza o índice do menor produto
+        }
+    }
+
+    // Troca o menor elemento encontrado com o primeiro elemento
+    if (min_idx != 0) {
+        temp = buffer[0];
+        buffer[0] = buffer[min_idx];
+        buffer[min_idx] = temp;
+    }
 }
 
-// Função para criar o caminho completo para o arquivo de partição
-char* criaCaminhoParticao(const char *pasta, int numero_particao) {
-    char *caminho = malloc(256); // Tamanho aumentado para garantir espaço suficiente
-    if (!caminho) {
-        perror("Erro ao alocar memória para o caminho da partição");
-        exit(EXIT_FAILURE);
-    }
-    snprintf(caminho, 256, "%s/particao%d.dat", pasta, numero_particao);
-    return caminho;
-}
+int selecaoNatural(FILE *arq_prod, int M) {
+    int qtd_particoes = 0, qtd_buffer = 0, qtd_reservatorio = 0, endereco_entrada = 0;
+    Produto *buffer[M], *reservatorio[M], *produto_auxiliar;
+    char nome_particao[100];
 
-// Função para criar uma nova partição com extensão .dat
-void criaParticao(const char *pasta, int numero_particao) {
-    char *caminho = criaCaminhoParticao(pasta, numero_particao);
-    FILE *arquivo = fopen(caminho, "wb");
-    if (!arquivo) {
-        perror("Erro ao criar partição");
-        free(caminho);
-        exit(EXIT_FAILURE);
-    }
-    fclose(arquivo);
-    free(caminho);
-}
-
-// Função para gravar registros em uma partição com extensão .dat
-void gravaEmParticao(Produto *produtos, int num_produtos, const char *pasta, int numero_particao) {
-    char *caminho = criaCaminhoParticao(pasta, numero_particao);
-    FILE *arquivo = fopen(caminho, "ab");
-    if (!arquivo) {
-        perror("Erro ao abrir partição para gravação");
-        free(caminho);
-        exit(EXIT_FAILURE);
-    }
-    for (int i = 0; i < num_produtos; i++) {
-        salvaProduto(&produtos[i], arquivo);
-    }
-    fclose(arquivo);
-    free(caminho);
-}
-
-// Função para processar e armazenar registros usando o algoritmo de Seleção Natural
-int selecaoNatural(FILE *arq_prod, const char *pasta_particoes, int M) {
     rewind(arq_prod);
-    int numero_particao = 0;
-    Produto *buffer = malloc(M * sizeof(Produto));
-    Produto *reservatorio = malloc(M * sizeof(Produto));
-    if (!buffer || !reservatorio) {
-        perror("Erro ao alocar memória");
-        exit(EXIT_FAILURE);
-    }
-
-    int num_reservatorio = 0; // Contador para o número de registros no reservatório
-    int num_buffer = 0; // Contador para o número de registros no buffer
-
-    // Primeiro, leia M registros do arquivo de entrada para o buffer
-    while (1) {
-        num_buffer = fread(buffer, sizeof(Produto), M, arq_prod);
-        if (num_buffer == 0) {
-            // Se o arquivo de entrada acabou e ainda há registros no reservatório, grave-os
-            if (num_reservatorio > 0) {
-                gravaEmParticao(reservatorio, num_reservatorio, pasta_particoes, numero_particao);
-            }
+    for (endereco_entrada = 0; endereco_entrada < M; endereco_entrada++) { // Preenchendo o buffer inicial
+        produto_auxiliar = leProduto(arq_prod);
+        if (produto_auxiliar == NULL) {
+            qtd_buffer = endereco_entrada;
             break;
         }
+        buffer[endereco_entrada] = produto_auxiliar;
+        qtd_buffer++;
+    }
 
-        // Ordena o buffer com base na chave do produto
-        qsort(buffer, num_buffer, sizeof(Produto), compararProdutos);
+    colocaMenorNaPrimeiraPosicao(buffer, qtd_buffer);
 
-        // Cria uma nova partição para os registros ordenados
-        criaParticao(pasta_particoes, numero_particao++);
-        
-        // Processa registros do buffer
-        for (int i = 0; i < num_buffer; i++) {
-            Produto *r = &buffer[i];
+    sprintf(nome_particao, "particoes/particao%d.dat", qtd_particoes++); // Cria uma nova partição para os registros ordenados
+    FILE *particao_atual = fopen(nome_particao, "wb");
 
-            // Grava o registro com a menor chave na partição
-            gravaEmParticao(r, 1, pasta_particoes, numero_particao - 1);
+    salvaProduto(buffer[0], particao_atual); // Grava o registro com menor chave na partição
+    free(buffer[0]); // Liberar o registro gravado
 
-            // Lê o próximo registro do arquivo
-            Produto proximo;
-            size_t lidos = fread(&proximo, sizeof(Produto), 1, arq_prod);
-            if (lidos == 1) {
-                if (proximo.codigo < r->codigo) {
-                    // Se o próximo registro tem uma chave menor, adicione-o ao reservatório
-                    if (num_reservatorio < M) {
-                        reservatorio[num_reservatorio++] = proximo;
+    for (int k = 1; k < qtd_buffer; k++) { // Movendo o restante dos registros no buffer para frente
+        buffer[k - 1] = buffer[k];
+    }
+    qtd_buffer--; // Atualiza a quantidade de registros no buffer
+
+    while ((produto_auxiliar = leProduto(arq_prod)) != NULL) { // Processamento dos registros restantes
+        endereco_entrada++;
+
+        if (produto_auxiliar->codigo < buffer[0]->codigo) {
+            reservatorio[qtd_reservatorio++] = produto_auxiliar; // Adicionar ao reservatório
+            if (qtd_reservatorio == M) { // Se o reservatório está cheio
+                while (qtd_buffer > 0) {
+                    colocaMenorNaPrimeiraPosicao(buffer, qtd_buffer);
+                    salvaProduto(buffer[0], particao_atual);
+                    free(buffer[0]); // Libera o registro que foi gravado
+
+                    for (int k = 1; k < qtd_buffer; k++) { // Movendo o restante dos registros no buffer para frente
+                        buffer[k - 1] = buffer[k];
                     }
-                } else {
-                    // Substitui o registro r no buffer pelo próximo registro
-                    buffer[i] = proximo;
+                    qtd_buffer--;
                 }
+                fclose(particao_atual);
+                
+                for (int j = 0; j < qtd_reservatorio; j++) { // Passa registros do reservatório para o buffer
+                    buffer[j] = reservatorio[j];
+                    reservatorio[j] = NULL; // Limpa o reservatório
+                }
+                qtd_buffer = qtd_reservatorio;
+                qtd_reservatorio = 0;
+                
+                sprintf(nome_particao, "particoes/particao%d.dat", qtd_particoes++); // Criar nova partição
+                particao_atual = fopen(nome_particao, "wb");
             }
-        }
-
-        // Se o reservatório estiver cheio, grave-o e substitua o buffer
-        if (num_reservatorio >= M) {
-            // Grave os registros restantes do buffer na partição de saída
-            for (int i = 0; i < num_buffer; i++) {
-                gravaEmParticao(&buffer[i], 1, pasta_particoes, numero_particao - 1);
+        } else {
+            buffer[qtd_buffer] = produto_auxiliar;  // Adiciona ao final do buffer
+            qtd_buffer++;
+            colocaMenorNaPrimeiraPosicao(buffer, qtd_buffer); // Ordena o buffer
+            salvaProduto(buffer[0], particao_atual); // Grava o menor registro
+            free(buffer[0]); // Libera o registro gravado
+            for (int k = 1; k < qtd_buffer; k++) { // Movendo o restante dos registros no buffer para frente
+                buffer[k - 1] = buffer[k];
             }
-
-            // Copia os registros do reservatório para o buffer
-            int num_para_buffer = num_reservatorio;
-            if (num_para_buffer > M) num_para_buffer = M; // Limita ao tamanho do buffer
-            memcpy(buffer, reservatorio, num_para_buffer * sizeof(Produto));
-
-            // Atualiza o número de registros no buffer
-            num_buffer = num_para_buffer;
-
-            // Esvazia o reservatório
-            num_reservatorio = 0;
-
-            // Cria uma nova partição para os registros ordenados
-            criaParticao(pasta_particoes, numero_particao++);
+            qtd_buffer--;
         }
     }
 
-    // Se houver registros restantes no reservatório, grave-os
-    if (num_reservatorio > 0) {
-        gravaEmParticao(reservatorio, num_reservatorio, pasta_particoes, numero_particao);
+    // Grava o restante dos registros do buffer
+    while (qtd_buffer > 0) {
+        colocaMenorNaPrimeiraPosicao(buffer, qtd_buffer); // Ordena o buffer
+        salvaProduto(buffer[0], particao_atual); // Grava o menor registro
+        free(buffer[0]); // Libera o registro gravado
+        for (int k = 1; k < qtd_buffer; k++) { // Movendo o restante dos registros no buffer para frente
+            buffer[k - 1] = buffer[k];
+        }
+        qtd_buffer--;
     }
 
-    printf("Selecao Natural concluída com sucesso.\n");
+    // Grava o restante do reservatório na última partição
+    if (qtd_reservatorio > 0) {
+        fclose(particao_atual);
+        sprintf(nome_particao, "particoes/particao%d.dat", qtd_particoes++);
+        particao_atual = fopen(nome_particao, "wb");
 
-    free(buffer); // Libera a memória alocada para o buffer
-    free(reservatorio); // Libera a memória alocada para o reservatório
+        while(qtd_reservatorio > 0){
+            colocaMenorNaPrimeiraPosicao(reservatorio, qtd_reservatorio);
+            salvaProduto(reservatorio[0], particao_atual);
+            free(reservatorio[0]); // Libera o registro gravado
+            for (int k = 1; k < qtd_reservatorio; k++) {
+                reservatorio[k - 1] = reservatorio[k];
+            }
+            qtd_reservatorio--;
+        }
+    }
 
-    return numero_particao;
+    fclose(particao_atual);
+
+    return qtd_particoes;
 }
 

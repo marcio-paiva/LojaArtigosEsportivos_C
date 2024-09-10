@@ -141,9 +141,7 @@ int main() {
                         break;
 
                     case 8:
-                        numero_particoes = selecaoNatural(arq_prod, "particoes", 10);
-                        FILE *pat0 = fopen("particoes/particao0.dat", "wb+");
-                        imprimirBaseProdutos(pat0);
+                        numero_particoes = selecaoNatural(arq_prod, 5);
                         break;
 
                     case 9:
