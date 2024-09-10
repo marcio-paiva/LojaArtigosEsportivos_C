@@ -1,10 +1,9 @@
 #ifndef INTERCALACAO_H
 #define INTERCALACAO_H
 
-#include <stdio.h>
 #include "loja.h"
 
-// Função para intercalação das partições
-void intercalaParticoes(const char *pasta_particoes, int num_particoes, FILE *arquivo_saida);
+// Função para realizar a intercalação ótima das partições
+void intercalacaoOtima(int num_particoes, int M);
 
-#endif // INTERCALACAO_H
+#endif

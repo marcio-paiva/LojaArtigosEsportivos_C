@@ -8,7 +8,7 @@
 #include "selecaoNatural.h"
 #include "intercalacao.h"
 #include "loja.h"
-#define TAM_PRODUTOS 100 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
+#define TAM_PRODUTOS 10 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 #define TAM_CLIENTES 1000 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 #define TAM_PEDIDOS 10 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 
@@ -145,7 +145,7 @@ int main() {
                         break;
 
                     case 9:
-                        intercalaParticoes("particoes", numero_particoes, arq_prod);
+                        intercalacaoOtima(numero_particoes, 100);
                         break;
 
                     case 0:
@@ -412,8 +412,6 @@ int main() {
             break;
         }
     } while (opcao_geral != 0);
-
-    system("pause");
 
     fclose(arq_prod);
     fclose(arq_cli);

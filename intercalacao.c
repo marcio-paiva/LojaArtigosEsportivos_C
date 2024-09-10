@@ -1,94 +1,61 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <limits.h>
 #include "intercalacao.h"
+#include "loja.h"
 
-#define TAM_CIN 256 // Tamanho do buffer para o nome dos arquivos
-
-// Função para abrir o próximo arquivo de partição e obter o arquivo e o buffer de produto
-FILE* abreProximoArquivo(FILE **arquivos, const char *pasta_particoes, int *indice, int num_particoes) {
-    if (*indice >= num_particoes) return NULL;
-
-    char caminho[TAM_CIN];
-    snprintf(caminho, TAM_CIN, "%s/particao%d.dat", pasta_particoes, *indice);
-
-    FILE *arquivo = fopen(caminho, "rb");
-    if (!arquivo) {
-        perror("Erro ao abrir partição");
-        exit(EXIT_FAILURE);
-    }
-
-    printf("Partição aberta: %s\n", caminho); // Mensagem de depuração
-    (*indice)++;
-    return arquivo;
-}
-
-// Função para encontrar o menor registro entre os arquivos abertos
-int encontraMenorRegistro(FILE **arquivos, Produto *menor_registro, int num_arquivos) {
-    int encontrou = 0;
-    int indice_menor = -1;
-
-    for (int i = 0; i < num_arquivos; i++) {
-        if (feof(arquivos[i])) continue;
-
-        Produto registro_atual;
-        if (fread(&registro_atual, sizeof(Produto), 1, arquivos[i]) != 1) {
-            continue;
-        }
-
-        printf("Lido do arquivo %d: %d\n", i, registro_atual.codigo); // Mensagem de depuração
-
-        if (!encontrou || registro_atual.codigo < menor_registro->codigo) {
-            *menor_registro = registro_atual;
-            indice_menor = i;
-            encontrou = 1;
-        }
-    }
-
-    // Se algum registro foi encontrado, ler o próximo registro do arquivo com o menor registro
-    if (encontrou && indice_menor != -1) {
-        if (feof(arquivos[indice_menor])) {
-            fclose(arquivos[indice_menor]);
-            arquivos[indice_menor] = NULL;
-            printf("Arquivo %d fechado porque está no final\n", indice_menor); // Mensagem de depuração
-            num_arquivos--;
-        }
-    }
-
-    return encontrou;
-}
-
-// Função para intercalação das partições
-void intercalaParticoes(const char *pasta_particoes, int num_particoes, FILE *arq_saida) {
-    FILE *arquivos[num_particoes];
-    int num_arquivos_abertos = 0;
-    int indice_particao = 0;
-
-    // Inicializa os arquivos
+void intercalacaoOtima(int num_particoes, int M) {
+    // Abrir todas as partições
+    FILE *particoes[num_particoes];
+    char nome_particao[100];
     for (int i = 0; i < num_particoes; i++) {
-        FILE *arquivo = abreProximoArquivo(arquivos, pasta_particoes, &indice_particao, num_particoes);
-        if (arquivo) {
-            arquivos[num_arquivos_abertos++] = arquivo;
+        sprintf(nome_particao, "particoes/particao%d.dat", i);
+        particoes[i] = fopen(nome_particao, "rb");
+    }
+
+    // Buffer para manter os produtos atualmente sendo comparados em cada partição
+    Produto *buffer[num_particoes];
+    for (int i = 0; i < num_particoes; i++) {
+        buffer[i] = leProduto(particoes[i]);  // Ler o primeiro produto de cada partição
+    }
+
+    // Abrir arquivo final para gravar os produtos intercalados
+    FILE *arquivo_final = fopen("produtos.dat", "wb");
+
+    int menor_indice;
+    Produto *menor_produto;
+
+    // Intercalar até que todos os produtos sejam gravados
+    while (1) {
+        menor_produto = NULL;
+        menor_indice = -1;
+
+        // Encontrar o menor produto entre as partições
+        for (int i = 0; i < num_particoes; i++) {
+            if (buffer[i] != NULL) {
+                if (menor_produto == NULL || buffer[i]->codigo < menor_produto->codigo) {
+                    menor_produto = buffer[i];
+                    menor_indice = i;
+                }
+            }
         }
-    }
 
-    if (num_arquivos_abertos == 0) {
-        printf("Nenhum arquivo de partição foi aberto.\n");
-        return;
-    }
-
-    Produto menor_registro;
-    while (encontraMenorRegistro(arquivos, &menor_registro, num_arquivos_abertos)) {
-        printf("Escrevendo registro: %d\n", menor_registro.codigo); // Mensagem de depuração
-        fwrite(&menor_registro, sizeof(Produto), 1, arq_saida);
-    }
-
-    // Fecha todos os arquivos restantes
-    for (int i = 0; i < num_arquivos_abertos; i++) {
-        if (arquivos[i]) {
-            fclose(arquivos[i]);
+        // Se não há mais registros para intercalar, sair do loop
+        if (menor_produto == NULL) {
+            break;
         }
+
+        // Grava o menor produto no arquivo final
+        salvaProduto(menor_produto, arquivo_final);
+        free(menor_produto);  // Liberar o menor produto gravado
+
+        // Ler o próximo produto da partição que tinha o menor produto
+        buffer[menor_indice] = leProduto(particoes[menor_indice]);
     }
 
-    printf("Intercalacao concluida com sucesso.\n");
+    // Fechar todas as partições e o arquivo final
+    for (int i = 0; i < num_particoes; i++) {
+        fclose(particoes[i]);
+    }
+    fclose(arquivo_final);
 }
