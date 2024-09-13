@@ -2,7 +2,7 @@
 #include <stdlib.h>   //alocação de memória, controle de processos e conversões de tipos, como malloc, free, exit e atoi.
 #include <string.h>   //manipulação de strings, como strcpy, strlen, strcat e strcmp.
 #include <time.h>     //tempo: time, clock, difftime e geração de números aleatórios, como srand e rand.
-#include <stdbool.h>
+#include <stdbool.h>  //define macros para facilitar o uso do tipo de dados booleano
 #include "selectionsort.h"
 #include "buscaBinaria.h"
 #include "buscaSequencial.h"
