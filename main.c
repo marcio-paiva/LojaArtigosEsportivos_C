@@ -2,15 +2,16 @@
 #include <stdlib.h>   //alocação de memória, controle de processos e conversões de tipos, como malloc, free, exit e atoi.
 #include <string.h>   //manipulação de strings, como strcpy, strlen, strcat e strcmp.
 #include <time.h>     //tempo: time, clock, difftime e geração de números aleatórios, como srand e rand.
+#include <stdbool.h>
 #include "selectionsort.h"
 #include "buscaBinaria.h"
 #include "buscaSequencial.h"
 #include "selecaoNatural.h"
 #include "intercalacao.h"
 #include "loja.h"
-#define TAM_PRODUTOS 10 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
+#define TAM_PRODUTOS 1000 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 #define TAM_CLIENTES 1000 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
-#define TAM_PEDIDOS 10 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
+#define TAM_PEDIDOS 100 //ALTERAR TAMANHO DA BASE DE PEDIDOS AQUI 
 
 int main() {
     FILE *arq_prod = fopen("produtos.dat", "wb+"); // Abre o arquivo para leitura e escrita em modo binário
@@ -38,7 +39,8 @@ int main() {
         int chave; //Utilizada para fazer buscas
         char cpf[15], endereco[100]; //Utilizadas para adicionar cliente
         int codigo_cli; int codigo_prod; double total; //Utilizadas para adicionar pedido
-        int numero_particoes = 0;
+        int numero_particoes = 0; //Contagem de particoes geradas na selecao natural para utilizar na intercalacao
+        bool prod_ordenado, cli_ordenado, ped_ordenado; //Verificacao de ordenacao nas bases para economizar tempo de execucao
 
         int opcao; //Utilizada para controlar switch case interno de cada menu
         switch (opcao_geral){
@@ -61,6 +63,7 @@ int main() {
                     case 1:
                         //CRIA BASE DE PRODUTOS
                         criarBaseProdutos(arq_prod, TAM_PRODUTOS);
+                        prod_ordenado = false;
                         break;
 
                     case 2:
@@ -75,6 +78,7 @@ int main() {
                         end_time = clock();
                         time = (end_time - start_time) / 1000.0;
                         printf("\nTempo de execucao da ordenacao dos produtos: %.6f segundos\n", time);
+                        prod_ordenado = true;
                         break;
 
                     case 4:
@@ -96,11 +100,13 @@ int main() {
                         //BUSCA BINARIA NA BASE DE PRODUTOS
                         printf("\n\nDigite o codigo do produto para buscar: ");
                         scanf("%d", &chave);
-                        start_time = clock();
-                        selectionSortProdutos(arq_prod, tamanhoArquivoProdutos(arq_prod));
-                        end_time = clock();
-                        time = (end_time - start_time) / 1000.0;
-                        printf("\nTempo de execucao da ordenacao dos produtos: %.6f segundos\n", time);
+                        if(prod_ordenado == false){
+                            start_time = clock();
+                            selectionSortProdutos(arq_prod, tamanhoArquivoProdutos(arq_prod));
+                            end_time = clock();
+                            time = (end_time - start_time) / 1000.0;
+                            printf("\nTempo de execucao da ordenacao dos produtos: %.6f segundos\n", time);
+                        }
                         start_time = clock();
                         resultado_prod = buscaBinariaProduto(chave, arq_prod, tamanhoArquivoProdutos(arq_prod));
                         end_time = clock();
@@ -141,11 +147,11 @@ int main() {
                         break;
 
                     case 8:
-                        numero_particoes = selecaoNatural(arq_prod, 5);
+                        numero_particoes = selecaoNaturalProdutos(arq_prod, 5);
                         break;
 
                     case 9:
-                        intercalacaoOtima(numero_particoes, 100);
+                        intercalacaoOtimaProdutos(numero_particoes);
                         break;
 
                     case 0:
@@ -169,6 +175,8 @@ int main() {
                 printf("5. Busca Binaria\n");
                 printf("6. Cadastrar Cliente\n");
                 printf("7. Remover Cliente\n");
+                printf("8. Selecao Natural\n");
+                printf("9. Intercalacao\n");
                 printf("0. Voltar\n");
                 printf("Escolha uma opcao: ");
                 scanf("%d", &opcao);
@@ -176,6 +184,7 @@ int main() {
                     case 1:
                         //CRIA BASE DE CLIENTES
                         criarBaseClientes(arq_cli, TAM_CLIENTES);
+                        cli_ordenado = false;
                         break;
 
                     case 2:
@@ -190,6 +199,7 @@ int main() {
                         end_time = clock();
                         time = (end_time - start_time) / 1000.0;
                         printf("\nTempo de execucao da ordenacao dos clientes: %.6f segundos\n", time);
+                        cli_ordenado = true;
                         break;
 
                     case 4:
@@ -211,11 +221,13 @@ int main() {
                         //BUSCA BINARIA NA BASE DE CLIENTES
                         printf("\n\nDigite o codigo do cliente para buscar: ");
                         scanf("%d", &chave);
-                        start_time = clock();
-                        selectionSortClientes(arq_cli, tamanhoArquivoClientes(arq_cli)); // ORDENAR ANTES
-                        end_time = clock();
-                        time = (end_time - start_time) / 1000.0;
-                        printf("\nTempo de execucao da ordenacao dos clientes: %.6f segundos\n", time);
+                        if(cli_ordenado == false){
+                            start_time = clock();
+                            selectionSortClientes(arq_cli, tamanhoArquivoClientes(arq_cli)); // ORDENAR ANTES
+                            end_time = clock();
+                            time = (end_time - start_time) / 1000.0;
+                            printf("\nTempo de execucao da ordenacao dos clientes: %.6f segundos\n", time);
+                        }
                         start_time = clock();
                         resultado_cli = buscaBinariaCliente(chave, arq_cli, tamanhoArquivoClientes(arq_cli));
                         end_time = clock();
@@ -256,6 +268,14 @@ int main() {
                         scanf("%d", &codigo);
                         removeCliente(codigo, arq_cli);
                         break;
+                    
+                    case 8:
+                        numero_particoes = selecaoNaturalClientes(arq_cli, 5);
+                        break;
+
+                    case 9:
+                        intercalacaoOtimaClientes(numero_particoes);
+                        break;
 
                     case 0:
                         printf("Voltando...\n");
@@ -278,6 +298,8 @@ int main() {
         printf("5. Busca Binaria\n");
         printf("6. Adicionar Pedido\n");
         printf("7. Remover Pedido\n");
+        printf("8. Selecao Natural\n");
+        printf("9. Intercalacao\n");
         printf("0. Voltar\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
@@ -285,6 +307,7 @@ int main() {
             case 1:
                 //CRIA BASE DE PEDIDOS
                 criarBasePedidos(arq_ped, TAM_PEDIDOS);
+                ped_ordenado = false;
                 break;
             case 2:
                 //IMPRIME BASE DE PEDIDOS
@@ -298,6 +321,7 @@ int main() {
                 end_time = clock();
                 time = (end_time - start_time) / 1000.0;
                 printf("\nTempo de execucao da ordenacao dos pedidos: %.6f segundos\n", time);
+                ped_ordenado = true;
                 break;
 
             case 4:
@@ -319,11 +343,13 @@ int main() {
                 //BUSCA BINARIA NA BASE DE PEDIDOS
                 printf("\n\nDigite o codigo do pedido para buscar: ");
                 scanf("%d", &chave);
-                start_time = clock();
-                selectionSortPedidos(arq_ped, tamanhoArquivoPedidos(arq_ped)); // ORDENAR ANTES
-                end_time = clock();
-                time = (end_time - start_time) / 1000.0;
-                printf("\nTempo de execucao da ordenacao dos pedidos: %.6f segundos\n", time);
+                if(ped_ordenado == false){
+                    start_time = clock();
+                    selectionSortPedidos(arq_ped, tamanhoArquivoPedidos(arq_ped)); // ORDENAR ANTES
+                    end_time = clock();
+                    time = (end_time - start_time) / 1000.0;
+                    printf("\nTempo de execucao da ordenacao dos pedidos: %.6f segundos\n", time);
+                }
                 start_time = clock();
                 resultado_ped = buscaBinariaPedido(chave, arq_ped, tamanhoArquivoPedidos(arq_ped));
                 end_time = clock();
@@ -348,8 +374,10 @@ int main() {
                 scanf("%d", &codigo_cli);
                 Cliente* cliente_atual;
                 if(codigoExisteCli(codigo_cli, arq_cli)){
-                    printf("\nOrdenando base para buscar cliente, ");
-                    selectionSortClientes(arq_cli, tamanhoArquivoClientes(arq_cli));
+                    if(prod_ordenado == false){
+                        printf("\nOrdenando base para buscar cliente, ");
+                        selectionSortClientes(arq_cli, tamanhoArquivoClientes(arq_cli));
+                    }
                     cliente_atual = buscaBinariaCliente(codigo_cli, arq_cli, tamanhoArquivoClientes(arq_cli));
                     imprimeCliente(cliente_atual);
                     free(cliente_atual);
@@ -362,8 +390,10 @@ int main() {
                 scanf("%d", &codigo_prod);
                 Produto* prod_comprado;
                 if(codigoExisteProd(codigo_prod, arq_prod)){
-                    printf("\nOrdenando base para buscar produto, ");
-                    selectionSortProdutos(arq_prod, tamanhoArquivoProdutos(arq_prod));
+                    if(cli_ordenado == false){
+                        printf("\nOrdenando base para buscar produto, ");
+                        selectionSortProdutos(arq_prod, tamanhoArquivoProdutos(arq_prod));
+                    }
                     prod_comprado = buscaBinariaProduto(codigo_prod, arq_prod, tamanhoArquivoProdutos(arq_prod));
                     imprimeProduto(prod_comprado);
                     printf("\nInforme a quantidade: ");
@@ -390,6 +420,14 @@ int main() {
                 printf("Informe o codigo do pedido: ");
                 scanf("%d", &codigo);
                 removePedido(codigo, arq_ped);    
+                break;
+
+            case 8:
+                numero_particoes = selecaoNaturalPedidos(arq_ped, 5);
+                break;
+
+            case 9:
+                intercalacaoOtimaPedidos(numero_particoes);
                 break;
 
             case 0:

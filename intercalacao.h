@@ -4,6 +4,10 @@
 #include "loja.h"
 
 // Função para realizar a intercalação ótima das partições
-void intercalacaoOtima(int num_particoes, int M);
+void intercalacaoOtimaProdutos(int num_particoes);
+
+void intercalacaoOtimaClientes(int num_particoes);
+
+void intercalacaoOtimaPedidos(int num_particoes);
 
 #endif
